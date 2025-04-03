@@ -6,7 +6,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-  } from "@/Components/ui/card";
+  } from "@/components/ui/card";
 import {
   Alert,
   AlertDescription,

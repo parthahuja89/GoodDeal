@@ -4,7 +4,7 @@ import {
     Card,
     CardContent,
     CardDescription
-  } from "@/Components/ui/card";
+  } from "@/components/ui/card";
 import { Spinner } from '../ui/spinner';
 import {
     Alert,
