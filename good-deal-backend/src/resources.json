@@ -1,0 +1,6 @@
+{
+    "urls":{
+        "google_oauth_api": "https://oauth2.googleapis.com",
+        "redirect_uri": "http://localhost:5173/callback"
+    }
+}
