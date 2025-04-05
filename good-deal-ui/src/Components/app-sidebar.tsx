@@ -1,53 +1,64 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Stars, AudioLines, Search, Settings } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "Discover",
     url: "home",
-    icon: Home,
+    icon: Stars,
   },
-  
+  {
+    title: "Watchlist",
+    url: "settings",
+    icon: AudioLines,
+  },
   {
     title: "Account Settings",
     url: "settings",
     icon: Settings,
   },
-]
+];
 
 export function AppSidebar() {
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+    <Sidebar
+      collapsible="icon"
+      className="border border-gray-200 dark:border-gray-800"
+    >
+      <SidebarContent className="mt-5">
+      <SidebarGroup>
+        <SidebarGroupContent>
+        <SidebarMenu className="mt-5">
+          {items.map((item) => (
+          <SidebarMenuItem key={item.title} className="mb-2 last:mb-0">
+            <SidebarMenuButton asChild>
+            <a href={item.url}>
+              <item.icon size={70} />
+              <span>{item.title}</span>
+            </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="flex items-center">
+      <SidebarTrigger className="w-full" />
+      </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
