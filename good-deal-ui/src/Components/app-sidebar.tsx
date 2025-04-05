@@ -1,4 +1,4 @@
-import { Calendar, Stars, AudioLines, Search, Settings } from "lucide-react";
+import { Calendar, Stars, AudioLines, Search, Settings, UserRound, CircleUser } from "lucide-react";
 
 import {
   Sidebar,
@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Button } from "./ui/button";
 
 // Menu items.
 const items = [
@@ -34,29 +35,36 @@ const items = [
 
 export function AppSidebar() {
   return (
-    <Sidebar
-      collapsible="icon"
-    >
+    <Sidebar collapsible="icon">
       <SidebarContent className="mt-5">
-      <SidebarGroup>
-        <SidebarGroupContent>
-        <SidebarMenu className="mt-5">
-          {items.map((item) => (
-          <SidebarMenuItem key={item.title} className="mb-2 last:mb-0">
-            <SidebarMenuButton asChild>
-            <a href={item.url}>
-              <item.icon size={70} />
-              <span>{item.title}</span>
-            </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+          <SidebarTrigger className="w-full" />
+            <SidebarMenu className="mt-5">
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title} className="mb-2 last:mb-0">
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon size={70} />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="flex items-center">
-      <SidebarTrigger className="w-full" />
+        <Button
+        variant="ghost"
+        className="w-full"
+          onClick={() => {
+            console.log("User logged out");
+          }}
+        >
+        <CircleUser size={20}/>
+        </Button>
       </SidebarFooter>
     </Sidebar>
   );
