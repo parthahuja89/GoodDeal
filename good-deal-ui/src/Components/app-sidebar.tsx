@@ -36,7 +36,6 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className="border border-gray-200 dark:border-gray-800"
     >
       <SidebarContent className="mt-5">
       <SidebarGroup>
