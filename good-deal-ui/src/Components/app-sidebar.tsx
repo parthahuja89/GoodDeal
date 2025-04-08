@@ -12,10 +12,23 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 import { Button } from "./ui/button";
 
 // Menu items.
 const items = [
+  {
+    title: "Search",
+    url: "search",
+    icon: Search,
+  },
   {
     title: "Discover",
     url: "home",
@@ -31,6 +44,7 @@ const items = [
     url: "settings",
     icon: Settings,
   },
+  
 ];
 
 export function AppSidebar() {
