@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "./components/Login/Login";
 import LoginCallback from "./components/Login/LoginCallback";
-import { AppSidebar } from "./components/app-sidebar";
+import GameView from "./components/Misc/GameView";
 import Dashboard from "./components/Dashboard/dashboard";
 import Layout from "./components/layout";
 import { ThemeProvider } from "next-themes";
@@ -43,6 +43,7 @@ function App() {
           {/* Only valid dashboard routes here */}
           <Route index element={<Dashboard />} />
           <Route path="home" element={<Dashboard />} />
+          <Route path="game" element={<GameView />} />
         </Route>
 
         {/* Catch-all for everything else */}
