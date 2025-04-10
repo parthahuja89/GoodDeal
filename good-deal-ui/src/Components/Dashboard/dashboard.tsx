@@ -13,44 +13,37 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import TopDeals from "./topDeals";
 import Popular from "./popular";
 
 export default function Dashboard() {
-
-  
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
-    }
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
     const { theme, setTheme } = useTheme();
     setTheme("dark");
-  }, [])
+  }, []);
 
-  const layout = [
-    {
-      title: "Popular Games",
-      content: <Popular />,
-      className: " col-span-4 lg:col-span-2 row-span-4",
-    },
-    {
-      title: "Top deals",
-      content: <TopDeals />,
-      className: "col-span-4 lg:col-span-2 row-span-4 lg:col-start-3",
-    },
-  ];
+  // const layout = [
+  //   {
+  //     title: "Popular Games",
+  //     content: <Popular />,
+  //     className: " col-span-4 lg:col-span-2 row-span-4",
+  //   },
+  //   {
+  //     title: "Top deals",
+  //     content: <TopDeals />,
+  //     className: "col-span-4 lg:col-span-2 row-span-4 lg:col-start-3",
+  //   },
+  // ];
 
   const [open, setOpen] = React.useState(false);
 
@@ -79,25 +72,22 @@ export default function Dashboard() {
         </div>
 
         <div className="flex justify-center flex-grow">
-          <div className="grid grid-cols-4 grid-rows-4 gap-4 p-4 w-full">
-            {layout.map((card, index) => (
-              <Card key={index} className={card.className}>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold flex items-center justify-between gap-1">
-                    {card.title}
-                    <a className="cursor-pointer underline underline-offset-4 text-slate-300 text-sm flex items-center gap-1">
-                      <span className="underline">Explore More Deals</span>{" "}
-                      <ExternalLink size={15} />
-                    </a>
-                  </CardTitle>
-                </CardHeader>
-                {card.content && (
-                  <CardContent className="flex justify-center items-center overflow-hidden">
-                    {card.content}
-                  </CardContent>
-                )}
-              </Card>
-            ))}
+          <div className=" p-4 w-full">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold flex items-center justify-between gap-1">
+                  Top Deals
+                  <a className="cursor-pointer underline underline-offset-4 text-slate-300 text-sm flex items-center gap-1">
+                    <span className="underline">Explore More Deals</span>{" "}
+                    <ExternalLink size={15} />
+                  </a>
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="flex justify-center items-center overflow-hidden">
+                <TopDeals />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

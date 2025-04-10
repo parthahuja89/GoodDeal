@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "./components/Login/Login";
 import LoginCallback from "./components/Login/LoginCallback";
-import GameView from "./components/Misc/GameView";
+import GameView from "./components/GameView/GameView";
 import Dashboard from "./components/Dashboard/dashboard";
 import Layout from "./components/layout";
 import { ThemeProvider } from "next-themes";

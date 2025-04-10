@@ -94,7 +94,7 @@ const dealData = [
 
 export default function topDeals() {
   return (
-    <div className="w-full h-[50vh] lg:h-[80vh] relative overflow-auto">
+    <div className="w-full h-[80vh] relative overflow-auto">
       <Table>
         <TableHeader className="sticky top-0 bg-purple-500 text-slate-50">
           <TableRow>
