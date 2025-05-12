@@ -13,43 +13,14 @@ import GameView from "./components/GameView/GameView";
 import Dashboard from "./components/Dashboard/dashboard";
 import Layout from "./components/layout";
 import { ThemeProvider } from "next-themes";
+import AppRoutes from "./Routes";
+
 import NotFound from "./components/Misc/NotFound";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/callback" element={<LoginCallback />} />
-
-        {/* Protected Dashboard Routes - with sidebar */}
-        <Route
-          path="/dashboard"
-          element={
-            <Layout>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <Outlet />
-              </ThemeProvider>
-            </Layout>
-          }
-        >
-          {/* Only valid dashboard routes here */}
-          <Route index element={<Dashboard />} />
-          <Route path="home" element={<Dashboard />} />
-          <Route path="game" element={<GameView />} />
-        </Route>
-
-        {/* Catch-all for everything else */}
-        <Route path="/dashboard/*" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <AppRoutes />
     </Router>
   );
 }

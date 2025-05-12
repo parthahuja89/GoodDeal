@@ -29,8 +29,8 @@ export default function Hero() {
         transition={{ delay: 0.2, duration: 0.5, ease: "easeInOut" }}
         className="text-xl md:text-2xl font-light text-slate-400 mt-5"
       >
-        Game Deals finds the best deals for games across multiple different platforms. You can
-        even add games to your wishlist to be notified when the games go on sale.
+        Dead simple to use. Search a game, and add it to your watchlist. You'll receive email notifications when the game goes on sale.
+        You can also view the current best deals.
         This project is also completely free to use and open source. You can check out the code on{" "}
         <a
           href="https://github.com/partha-huja/GameWrecks"

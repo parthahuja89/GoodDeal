@@ -2,8 +2,9 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import logger from "./services/logger";
+import router from "./api/routes";
 
-import auth from './api/routeControllers/AuthController';
+
 dotenv.config();
 const cors = require('cors');
 
@@ -13,16 +14,14 @@ const port = process.env.PORT || 3000;
 //cors policy 
   
 const corsOptions = {
-  origin: 'http://localhost:5173',  // Allow this origin
-  methods: 'GET,POST,PUT,DELETE',  // Allow specific methods if needed
-  credentials: true,  // Allow cookies if required
+  origin: 'http://localhost:5173',  
+  methods: 'GET,POST,PUT,DELETE',  
+  credentials: true,  
 };
 
 app.use(cors(corsOptions));
-
-
-//Route imports
-app.use('/auth', auth);
+app.use(express.json());
+app.use("/api", router);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

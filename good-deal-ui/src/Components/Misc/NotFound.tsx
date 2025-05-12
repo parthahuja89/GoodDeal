@@ -29,7 +29,7 @@ export default function NotFound() {
             <span className="mt-5">You seem to be lost. This is not a valid path. That is all we know.</span>
             <Button 
               className="w-2/3 m-5" 
-              onClick={() => window.location.href = '/dashboard/home'}
+              onClick={() => window.location.href = '/home'}
             >
               Return Home
             </Button>

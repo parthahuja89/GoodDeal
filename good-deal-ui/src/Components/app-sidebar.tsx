@@ -26,24 +26,14 @@ import { Button } from "./ui/button";
 const items = [
   {
     title: "Search",
-    url: "search",
-    icon: Search,
-  },
-  {
-    title: "Discover",
     url: "home",
-    icon: Stars,
+    icon: Search,
   },
   {
     title: "Watchlist",
     url: "settings",
     icon: AudioLines,
-  },
-  {
-    title: "Account Settings",
-    url: "settings",
-    icon: Settings,
-  },
+  }
   
 ];
 
@@ -58,8 +48,8 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title} className="mb-2 last:mb-0">
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon size={70} />
+                    <a href={`/${item.url}`}>
+                      <item.icon size={32} />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>

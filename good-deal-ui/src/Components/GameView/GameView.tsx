@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import severance from "../../assets/sev.jpg";
-import { Undo2, PlusIcon } from "lucide-react";
+import { BellIcon, ArrowBigLeft } from "lucide-react";
 import DealsTable from "./DealsTable";
 
 const tags = [
@@ -50,12 +50,25 @@ export default function GameView() {
   }, []);
 
   return (
-    <div className="flex flex-col lg:flex-row w-full p-2 gap-4">
-      <div className="main lg:w-9/12">
+    <div className="flex flex-col flex-col-reverse xl:flex-row w-full p-2 gap-4">
+      <div className="main xl:w-9/12">
         <div className="3">
           <Card className="mt-4">
             <CardHeader>
-              <CardTitle className="text-2xl">Good deals</CardTitle>
+              <CardTitle className="text-2xl flex items-center">
+                <Button variant="outline">
+                  <ArrowBigLeft />
+                </Button>
+
+                <span className="ml-2">Good deals</span>
+
+                <div className="ml-auto">
+                  <Button>
+                    <BellIcon className="mr-2" />
+                    Subscribe to Game
+                  </Button>
+                </div>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <DealsTable />
@@ -64,7 +77,7 @@ export default function GameView() {
         </div>
       </div>
 
-      <div className="lg:w-3/12">
+      <div className="xl:w-3/12">
         <Card>
           <CardHeader>
             <CardTitle className="flex flex-col justify-between items-start">
@@ -96,6 +109,7 @@ export default function GameView() {
                 </div>
               </div>
               <div className="mt-5">
+                <div className="flex"></div>
                 <span className="text-2xl bg-gradient-to-r from-orange-500 via-pink-500 to-red-500 text-transparent bg-clip-text">
                   Rockstar Games
                 </span>
