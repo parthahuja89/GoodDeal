@@ -15,11 +15,9 @@ import {
   ArrowDown,
   ChevronLeft,
   ChevronRight,
-  AlertTriangle,
 } from "lucide-react";
 import windows from "@/assets/windows.svg";
 import GameDeal from "@/models/GameDeal";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 interface DealsTableProps {
   gameDeals: GameDeal[];
@@ -129,16 +127,11 @@ export default function DealsTable({ gameDeals }: DealsTableProps) {
                 colSpan={4}
                 className="text-center py-8 text-muted-foreground"
               >
-                <Alert className="mb-6 border-amber-600 select-none">
-                  <AlertTriangle className="h-5 w-5 text-amber-500" />
-                  <AlertTitle className="text-amber-500">
-                    No Deals found
-                  </AlertTitle>
-                  <AlertDescription className="text-amber-300">
-                    Games that are free to play may not have any deals
-                    available.
-                  </AlertDescription>
-                </Alert>
+
+                No deals available at the moment. <br />
+                <div className="mt-2 p-2 border-2 border-yellow-400 rounded-md text-yellow-700 ">
+                  Games that are free to play may not have any deals available
+                </div>
               </TableCell>
             </TableRow>
           ) : (
@@ -161,24 +154,16 @@ export default function DealsTable({ gameDeals }: DealsTableProps) {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap max-w-full">
-                    {deal.platforms.map((platform, index) => (
-                      <span
-                        key={index}
-                        className={`bg-gray-300 text-black text-xs px-3 py-1 rounded-full mb-2 ${
-                          index > 0 ? "ml-2" : ""
-                        }`}
-                      >
-                        {platform?.name}
-                      </span>
-                    ))}
-                  </div>
-
-                  {deal.platforms.length < 1 && (
-                    <span className="text-gray-500 text-xs">
-                      No platforms available
+                  {deal.platforms.map((platform, index) => (
+                    <span
+                      key={index}
+                      className={`bg-gray-300 text-black text-xs px-3 py-1 rounded-full ${
+                        index > 0 ? "ml-2" : ""
+                      }`}
+                    >
+                      {platform?.name}
                     </span>
-                  )}
+                  ))}
                 </TableCell>
               </TableRow>
             ))
@@ -209,11 +194,6 @@ export default function DealsTable({ gameDeals }: DealsTableProps) {
           Next
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
-      </div>
-
-      <div className="text-sm text-muted-foreground mt-4 text-center">
-        Games are sourced from ITAD API. The creators may received a commission
-        from the referral link.
       </div>
     </Card>
   );

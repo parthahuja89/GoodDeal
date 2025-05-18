@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 const route = Router();
 
-import * as gameService from "../../services/Games/Game";
+import * as gameService from "../services/GameService";
 import { Game } from "../models/Game";
 import GameDeal from "../models/GameDeal";
 
@@ -58,7 +58,7 @@ route.get("/search-game/:name", async (req: Request, res: Response) => {
   const gameName = req.params.name;
   try {
     gameService.searchGame(gameName)
-      .then((game: Game[]) => {
+      .then((game: Game) => {
         res.status(200).json(game);
       })
       .catch((error: any) => {

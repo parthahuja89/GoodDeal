@@ -103,15 +103,11 @@ export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
     const response = await axios.post(`${BASE_URL}/games/prices/v3`, [gameId],{
       params: {
       key: ITAD_API_KEY,
+      deals: true,
       }
     });
 
     const data = response.data;
-    
-    if(!data || !data[0] || !data[0].deals) {
-      logger.error("No deals found for the game with ID:", gameId);
-      return [];
-    }
 
     logger.info("Game deals data:", data);
     const deals: GameDeal[] = data[0].deals?.map((deal: any) => ({
@@ -135,7 +131,7 @@ export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
  */
 export const searchGame = async (gameTitle: string): Promise<Game[]> => {
   try {
-    const response = await axios.get(`${BASE_URL}/games/search/v1`, {
+    const response = await axios.post(`${BASE_URL}/games/search/v2`, {
       params: {
         key: ITAD_API_KEY,
         title: gameTitle,
@@ -145,7 +141,7 @@ export const searchGame = async (gameTitle: string): Promise<Game[]> => {
 
     const data = response.data;
 
-    const games: Game[] = data.map((game: any) => ({
+    const games: Game[] = data.list.map((game: any) => ({
       title: game.title,
       id: game.id,
       asset_url: game.assets?.banner600 || game.assets?.banner400,

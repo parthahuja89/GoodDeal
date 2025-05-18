@@ -103,6 +103,7 @@ export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
     const response = await axios.post(`${BASE_URL}/games/prices/v3`, [gameId],{
       params: {
       key: ITAD_API_KEY,
+      deals: true,
       }
     });
 

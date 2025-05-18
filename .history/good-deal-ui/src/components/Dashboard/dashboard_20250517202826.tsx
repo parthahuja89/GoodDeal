@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Search, ShoppingBag, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import severance from "../../assets/sev.jpg";
 import { fetchGameDeals, searchGames } from "@/Services/Games";
 import SearchResults from "./searchResults";
@@ -74,32 +74,13 @@ export default function GameSearchPage() {
           </span>
         </h1>
 
-        <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-2xl">
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="w-full max-w-2xl"
+        >
           <div className="relative">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-              <AnimatePresence mode="wait">
-                {isLoading ? (
-                  <motion.div
-                    key="loader"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="search"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    <Search className="h-5 w-5" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <Search className="h-5 w-5" />
             </span>
             <Input
               type="text"
@@ -108,7 +89,7 @@ export default function GameSearchPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-
+            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
             {searchQuery && (
               <Button
                 variant={"outline"}
@@ -146,13 +127,11 @@ export default function GameSearchPage() {
               className="group bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative aspect-[4/3] w-full">
-                {game.asset_url && (
-                  <img
-                    src={game.asset_url || severance}
-                    alt={game.title}
-                    className="w-full h-full object-cover"
-                  />
-                )}
+                <img
+                  src={game.asset_url || severance}
+                  alt={game.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-lg line-clamp-2 text-gray-100 transition-colors">
@@ -160,8 +139,7 @@ export default function GameSearchPage() {
                 </h3>
                 <div className="flex flex-col">
                   <span className="font-bold text-lg text-white">
-                    <span className="text-orange-500 mr-1">|</span>$
-                    {game.price_new}
+                    <span className="text-orange-500 mr-1">|</span>${game.price_new}
                   </span>
                   <span className="text-gray-400 line-through text-sm">
                     ${game.price_regular}

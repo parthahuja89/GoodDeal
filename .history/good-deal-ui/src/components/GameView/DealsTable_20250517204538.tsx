@@ -161,24 +161,16 @@ export default function DealsTable({ gameDeals }: DealsTableProps) {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap max-w-full">
-                    {deal.platforms.map((platform, index) => (
-                      <span
-                        key={index}
-                        className={`bg-gray-300 text-black text-xs px-3 py-1 rounded-full mb-2 ${
-                          index > 0 ? "ml-2" : ""
-                        }`}
-                      >
-                        {platform?.name}
-                      </span>
-                    ))}
-                  </div>
-
-                  {deal.platforms.length < 1 && (
-                    <span className="text-gray-500 text-xs">
-                      No platforms available
+                  {deal.platforms.map((platform, index) => (
+                    <span
+                      key={index}
+                      className={`bg-gray-300 text-black text-xs px-3 py-1 rounded-full ${
+                        index > 0 ? "ml-2" : ""
+                      }`}
+                    >
+                      {platform?.name}
                     </span>
-                  )}
+                  ))}
                 </TableCell>
               </TableRow>
             ))
@@ -209,11 +201,6 @@ export default function DealsTable({ gameDeals }: DealsTableProps) {
           Next
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
-      </div>
-
-      <div className="text-sm text-muted-foreground mt-4 text-center">
-        Games are sourced from ITAD API. The creators may received a commission
-        from the referral link.
       </div>
     </Card>
   );

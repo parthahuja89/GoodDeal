@@ -103,11 +103,11 @@ export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
     const response = await axios.post(`${BASE_URL}/games/prices/v3`, [gameId],{
       params: {
       key: ITAD_API_KEY,
+      deals: true,
       }
     });
 
     const data = response.data;
-    
     if(!data || !data[0] || !data[0].deals) {
       logger.error("No deals found for the game with ID:", gameId);
       return [];

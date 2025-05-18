@@ -146,13 +146,11 @@ export default function GameSearchPage() {
               className="group bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative aspect-[4/3] w-full">
-                {game.asset_url && (
-                  <img
-                    src={game.asset_url || severance}
-                    alt={game.title}
-                    className="w-full h-full object-cover"
-                  />
-                )}
+                <img
+                  src={game.asset_url || severance}
+                  alt={game.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-lg line-clamp-2 text-gray-100 transition-colors">
