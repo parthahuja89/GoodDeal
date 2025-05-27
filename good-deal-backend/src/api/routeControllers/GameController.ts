@@ -4,6 +4,8 @@ const route = Router();
 import * as gameService from "../../services/Games/Game";
 import { Game } from "../models/Game";
 import GameDeal from "../models/GameDeal";
+import { SteamDeal } from "../models/SteamDeal";
+import logger from "../../services/logger";
 
 route.get("/", (req: Request, res: Response) => {
   res.status(200).json({ default: "route" });
@@ -70,4 +72,20 @@ route.get("/search-game/:name", async (req: Request, res: Response) => {
   }
 });
 
+route.get("/get-steam-deals", async (req: Request, res: Response) => {
+  const steamid = req.query.steamid as string;
+  
+  
+  try {
+    gameService.getSteamDeals(steamid)
+      .then((gameDeals: SteamDeal[]) => {
+        res.status(200).json(gameDeals);
+      })
+      .catch((error: any) => {
+        res.status(500).json({ error: error.message });
+      });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
 export default route;

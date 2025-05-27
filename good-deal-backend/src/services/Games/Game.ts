@@ -1,7 +1,9 @@
+import { Response } from 'express';
 import axios from "axios";
 import logger from "../logger";
 import { Game } from "../../api/models/Game";
 import GameDeal from "../../api/models/GameDeal";
+import { SteamDeal } from "../../api/models/SteamDeal";
 import dotenv from "dotenv";
 import { platform } from "os";
 import { log } from "console";
@@ -9,7 +11,8 @@ dotenv.config();
 
 
 const ITAD_API_KEY = process.env.ITAD_API_KEY ?? "";
-const BASE_URL = "https://api.isthereanydeal.com";
+const BASE_ITAD_URL = "https://api.isthereanydeal.com";
+const BASE_STEAM_URL = "https://api.steampowered.com";
 
 if (!ITAD_API_KEY) {
   logger.error("ITAD_API_KEY is not defined in the environment variables.");
@@ -23,9 +26,8 @@ if (!ITAD_API_KEY) {
 export const getPopularGames = async (
   limit: number = 12
 ): Promise<GameDeal[]> => {
-  logger.info(`Using ITAD API key: ${ITAD_API_KEY}`);
   try {
-    const response = await axios.get(`${BASE_URL}/deals/v2`, {
+    const response = await axios.get(`${BASE_ITAD_URL}/deals/v2`, {
       params: {
         key: ITAD_API_KEY,
         limit,
@@ -58,7 +60,7 @@ export const getPopularGames = async (
  */
 export const getGameInfo = async (gameId: string): Promise<Game> => {
   try {
-    const response = await axios.get(`${BASE_URL}/games/info/v2`, {
+    const response = await axios.get(`${BASE_ITAD_URL}/games/info/v2`, {
       params: {
         key: ITAD_API_KEY,
         id: gameId,
@@ -100,7 +102,7 @@ export const getGameInfo = async (gameId: string): Promise<Game> => {
  */
 export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
   try {
-    const response = await axios.post(`${BASE_URL}/games/prices/v3`, [gameId],{
+    const response = await axios.post(`${BASE_ITAD_URL}/games/prices/v3`, [gameId],{
       params: {
       key: ITAD_API_KEY,
       }
@@ -135,7 +137,7 @@ export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
  */
 export const searchGame = async (gameTitle: string): Promise<Game[]> => {
   try {
-    const response = await axios.get(`${BASE_URL}/games/search/v1`, {
+    const response = await axios.get(`${BASE_ITAD_URL}/games/search/v1`, {
       params: {
         key: ITAD_API_KEY,
         title: gameTitle,
@@ -157,3 +159,132 @@ export const searchGame = async (gameTitle: string): Promise<Game[]> => {
     throw error;
   }
 }
+
+/**
+ * Returns the Steam deals for a given Steam ID
+ * @param steamId The Steam ID to fetch deals for
+ */
+export const getSteamDeals = async (steamId: string): Promise<SteamDeal[]> => {
+  try {
+    const appIds = await getSteamAppIds(steamId)
+    const [itadIds, dealsPreload] = await convertSteamAppIdsToItadGameIds(appIds.splice(0, 100));
+    const deals: SteamDeal[] = await fetchPreloadedDeals(itadIds, dealsPreload);
+    return deals;
+  }
+  catch (error) {
+    logger.error("Error fetching Steam app IDs:", error);
+    throw error;
+  }
+}
+    
+
+
+/**
+ * Returns array of appids from a given Steam ID
+ * @param steamId The Steam ID to fetch appids for
+ * @returns Array of appids
+ */
+export const getSteamAppIds = async (steamId: string): Promise<string[]> => {
+  try {
+    logger.info(`Fetching Steam app IDs for user ID: ${steamId}`);
+    const response = await axios.get(`${BASE_STEAM_URL}/IWishlistService/GetWishlist/v1`, {
+      params: { steamid: steamId },
+    });
+
+    const data = response.data;
+
+    if (!data?.response?.items) {
+      logger.error(`No items found in the response for Steam ID: ${steamId}`);
+      return [];
+    }
+
+    const appIds = data.response.items.map((item: { appid: number }) => item.appid.toString());
+    logger.info(`Parsed Steam app IDs: ${JSON.stringify(appIds)}`);
+    return appIds;
+  } catch (error) {
+    logger.error(`Error fetching Steam app IDs: ${error}`);
+    throw error;
+  }
+};
+
+/**
+ * Converts a Steam app ID to a ITAD game ID
+ * @param appIds The Steam app ID array to convert
+ * TODO: Add a cache to avoid multiple requests for the same app ID
+ */
+export const convertSteamAppIdsToItadGameIds = async (appIds: string[]): Promise<[string[], SteamDeal[]]> => {
+  const itadGameIds: string[] = [];
+  //Preloaded game info without prices
+  const dealsPreload: SteamDeal[] = [];
+
+  const itadRequests = appIds.map(async (appId) => {
+    try {
+      const response = await axios.get(`${BASE_ITAD_URL}/games/lookup/v1`, {
+        params: {
+          key: ITAD_API_KEY,
+          appid: appId,
+        },
+      });
+
+      const data = response.data;
+
+      if (data && data.game && data.game.id) {
+        itadGameIds.push(data.game.id);
+        dealsPreload.push({
+          itad_id: data.game.id,
+          asset_url: data.game.assets?.banner600 || data.game.assets?.banner400,
+          title: data.game.title,
+          best_price: 0, 
+          steam_price: 0,
+        });
+      } else {
+        logger.warn(`No ITAD game ID found for Steam app ID: ${appId}`);
+      }
+    } catch (error) {
+      logger.error(`Error converting Steam app ID ${appId} to ITAD game ID: ${error}`);
+    }
+  });
+
+  await Promise.all(itadRequests);
+  return [itadGameIds, dealsPreload];
+};
+
+
+/**
+ * Gets the best deals for preloaded Steam deals
+ * @param preloadDeals The preloaded Steam deals to fetch prices for
+ */
+export const fetchPreloadedDeals = async (itadGameIds: string[], preloadDeals: SteamDeal[]): Promise<SteamDeal[]> => {
+  logger.info(`Fetching best deals for preloaded Steam deals.. Total games: ${itadGameIds.length}`);
+  try {
+    const response = await axios.post(`${BASE_ITAD_URL}/games/prices/v3`, itadGameIds, {
+      params: {
+        key: ITAD_API_KEY,
+      },
+    });
+
+    const data = response.data;
+
+    if (!data || !data[0] || !data[0].deals) {
+      logger.error("No deals found for the provided ITAD game IDs.");
+      return [];
+    }
+
+    const deals: SteamDeal[] = data.map((game: any) => {
+      const preloadDeal = preloadDeals.find(deal => deal.itad_id === game.id);
+      return {
+        itad_id: game.id,
+        asset_url: preloadDeal?.asset_url || "",
+        title: preloadDeal?.title,
+        best_price: Math.min(...game.deals?.map((deal: any) => deal.price.amount) || [0]), 
+        steam_price: game.deals?.find((deal: any) => deal.shop.name === "Steam")?.price.amount || 0,
+      };
+    });
+
+    return deals;
+  } catch (error) {
+    logger.error("Error fetching best deals for preloaded Steam deals:", error);
+    throw error;
+  }
+};
+

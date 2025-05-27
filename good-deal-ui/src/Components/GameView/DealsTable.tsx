@@ -176,7 +176,7 @@ export default function DealsTable({ gameDeals }: DealsTableProps) {
 
                   {deal.platforms.length < 1 && (
                     <span className="text-gray-500 text-xs">
-                      No platforms available
+                      Platform data missing
                     </span>
                   )}
                 </TableCell>

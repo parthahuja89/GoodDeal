@@ -27,27 +27,27 @@ export default function GameView() {
   const [loading, setLoading] = useState(true);
   const [animatedWidths, setAnimatedWidths] = useState([]);
 
-function loadGame(game_id) {
-  if (game_id) {
-    setLoading(true);
+  function loadGame(game_id) {
+    if (game_id) {
+      setLoading(true);
 
-    const gamePromise = fetchGame(game_id);
-    const dealsPromise = fetchGameDealsById(game_id);
+      const gamePromise = fetchGame(game_id);
+      const dealsPromise = fetchGameDealsById(game_id);
 
-    Promise.all([gamePromise, dealsPromise])
-      .then(([gameData, gameDeals]) => {
-        setGame(gameData);
-        setAnimatedWidths(new Array(gameData?.reviews?.length || 0).fill(0));
-        setDeals(gameDeals);
-      })
-      .catch((error) => {
-        console.error('Error loading game or deals:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      Promise.all([gamePromise, dealsPromise])
+        .then(([gameData, gameDeals]) => {
+          setGame(gameData);
+          setAnimatedWidths(new Array(gameData?.reviews?.length || 0).fill(0));
+          setDeals(gameDeals);
+        })
+        .catch((error) => {
+          console.error("Error loading game or deals:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }
-}
   // Fetch the game data when the component mounts or when game_id changes
   useEffect(() => {
     loadGame(game_id);
@@ -58,9 +58,9 @@ function loadGame(game_id) {
     if (game?.reviews && animatedWidths.length > 0) {
       // Small delay to ensure DOM is ready
       const timer = setTimeout(() => {
-        setAnimatedWidths(game.reviews.map(rating => rating.score));
+        setAnimatedWidths(game.reviews.map((rating) => rating.score));
       }, 300);
-      
+
       return () => clearTimeout(timer);
     }
   }, [game]);
@@ -83,14 +83,16 @@ function loadGame(game_id) {
           <Card className="mt-4">
             <CardHeader>
               <CardTitle className="text-2xl flex items-center">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    window.history.back();
-                  }}
-                >
-                  <ArrowBigLeft />
-                </Button>
+                {window.history.length > 1 && (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      window.history.back();
+                    }}
+                  >
+                    <ArrowBigLeft />
+                  </Button>
+                )}
 
                 <span className="ml-2">Game deals</span>
 
@@ -179,7 +181,14 @@ function loadGame(game_id) {
                 {game?.reviews?.map((rating, index) => (
                   <div className="flex flex-col" key={index}>
                     <div className="flex justify-between text-md items-center">
-                        <a href={rating.link} target="_blank" rel="noopener noreferrer" className="hover:underline">{rating.source}</a>
+                      <a
+                        href={rating.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        {rating.source}
+                      </a>
                       <span className="text-gray-400 text-sm">
                         {rating.score} Score
                       </span>
@@ -188,7 +197,9 @@ function loadGame(game_id) {
                     <div className="flex items-center w-full mt-2">
                       <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
                         <div
-                          className={`${getRatingColor(rating.score)} h-full transition-all duration-1000`}
+                          className={`${getRatingColor(
+                            rating.score
+                          )} h-full transition-all duration-1000`}
                           style={{ width: `${animatedWidths[index]}%` }}
                         />
                       </div>

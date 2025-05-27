@@ -7,7 +7,7 @@ import Dashboard from "./components/Dashboard/dashboard";
 import Layout from "./components/layout";
 import NotFound from "./components/Misc/NotFound";
 import { ThemeProvider } from "next-themes";
-import AccountSettings from "./components/Account/AccountSettings";
+import SteamDeals from "./components/SteamDeals/SteamDeals";
 
 const AppRoutes = () => (
   <Routes>
@@ -34,7 +34,7 @@ const AppRoutes = () => (
       
       <Route path="home" element={<Dashboard />} />
       <Route path="game/:game_id" element={<GameView />} />
-      <Route path="settings" element={<AccountSettings />} />
+      <Route path="steam-deals" element={<SteamDeals />} />
     
     </Route>
 

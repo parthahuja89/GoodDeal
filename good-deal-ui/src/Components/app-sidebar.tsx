@@ -1,4 +1,4 @@
-import { Calendar, Stars, AudioLines, Search, Settings, UserRound, CircleUser } from "lucide-react";
+import { Calendar, Stars, AudioLines, Search, Settings, ListCheck, CircleUser } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,13 +13,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-
 import { Button } from "./ui/button";
 
 // Menu items.
@@ -30,9 +23,14 @@ const items = [
     icon: Search,
   },
   {
-    title: "Watchlist",
+    title: "Steam Deals",
+    url: "steam-deals",
+    icon: ListCheck,
+  },
+    {
+    title: "Settings",
     url: "settings",
-    icon: AudioLines,
+    icon: Settings,
   }
   
 ];
