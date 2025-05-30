@@ -27,7 +27,7 @@ export function redirectToGoogleAuth() {
 
 //Gets the token from API by exchanging auth code
 export async function getTokenFromCode(authCode: string) {
-    await axios.get(`${baseApiUri}/auth/token`, {
+    await axios.get(`${baseApiUri}/api/auth/token`, {
         headers: {
             auth_code: authCode
         }

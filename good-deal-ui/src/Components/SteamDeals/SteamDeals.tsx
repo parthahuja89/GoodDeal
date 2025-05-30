@@ -4,7 +4,8 @@ import { useState, useEffect, useId } from "react";
 import { Button } from "@/components/ui/button";
 import { calculateGameSavings, syncSteamWishlist } from "@/Services/Games";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
+
 import { Toaster } from "@/components/ui/toaster";
 
 import {
@@ -25,9 +26,17 @@ import {
 import { FormEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tag, Percent, DollarSign, CircleOff, RefreshCcw } from "lucide-react";
+import {
+  Tag,
+  Percent,
+  DollarSign,
+  CircleOff,
+  RefreshCcw,
+  AlertCircle,
+} from "lucide-react";
 import { SteamDeal } from "@/models/SteamDeal";
 import SteamDealsTable from "./SteamDealsTable";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export default function SteamDeals() {
   const [totalGames, setTotalGames] = useState("--");
@@ -36,8 +45,7 @@ export default function SteamDeals() {
   const [steamId, setSteamId] = useState("");
   const [gameData, setGameData] = useState<SteamDeal[]>([]);
   const [syncLoader, setSyncLoader] = useState(false);
-  const { toast } = useToast()
-
+  const { toast } = useToast();
 
   async function syncSteamDeals() {
     setSyncLoader(true);
@@ -46,7 +54,8 @@ export default function SteamDeals() {
       if (!games || games.length === 0) {
         toast({
           title: "No games found",
-          description: "Please make sure the SteamID is correct and your profile is set to public.",
+          description:
+            "Please make sure the SteamID is correct and your profile is set to public.",
         });
         return;
       }
@@ -58,7 +67,10 @@ export default function SteamDeals() {
     } catch (error) {
       toast({
         title: "Error syncing Steam library",
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
         variant: "destructive",
       });
     } finally {
@@ -75,7 +87,8 @@ export default function SteamDeals() {
             <CardTitle className="text-white text-xl">Steam Account</CardTitle>
           </div>
           <CardDescription className="text-gray-400">
-            Enter your Steam ID to sync your wishlist
+            Imports are currently limited to 20 games. Enter your Steam ID to
+            sync your wishlist.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -183,52 +196,58 @@ export default function SteamDeals() {
           </form>
         </CardContent>
       </Card>
-      <div className="grid gap-4 md:grid-cols-3 mt-10">
-        <Card className="border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 shadow-lg hover:shadow-blue-900/20 transition-shadow duration-500">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">
-              Games in Wishlist
-            </CardTitle>
-            <Tag className="h-5 w-5 text-blue-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-white">{totalGames}</div>
-            <p className="text-xs text-gray-400 mt-1">Games you want to buy</p>
-          </CardContent>
-        </Card>
+      {gameData.length > 0 && (
+        <div className="grid gap-4 md:grid-cols-3 mt-10">
+          <Card className="border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 shadow-lg hover:shadow-blue-900/20 transition-shadow duration-500">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Games in Wishlist
+              </CardTitle>
+              <Tag className="h-5 w-5 text-blue-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-white">{totalGames}</div>
+              <p className="text-xs text-gray-400 mt-1">
+                Games you want to buy
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card className="border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 shadow-lg hover:shadow-green-900/20 transition-shadow duration-500">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">
-              Potential Savings
-            </CardTitle>
-            <DollarSign className="h-5 w-5 text-green-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-white">${totalSavings}</div>
-            <p className="text-xs text-gray-400 mt-1">
-              By buying at best prices
-            </p>
-          </CardContent>
-        </Card>
+          <Card className="border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 shadow-lg hover:shadow-green-900/20 transition-shadow duration-500">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Potential Savings
+              </CardTitle>
+              <DollarSign className="h-5 w-5 text-green-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-white">
+                ${totalSavings}
+              </div>
+              <p className="text-xs text-gray-400 mt-1">
+                By buying at best prices
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card className="border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 shadow-lg hover:shadow-purple-900/20 transition-shadow duration-500">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">
-              Average Discount
-            </CardTitle>
-            <Percent className="h-5 w-5 text-purple-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-white">
-              {averageDiscount}%
-            </div>
-            <p className="text-xs text-gray-400 mt-1">
-              Average savings per game
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          <Card className="border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 shadow-lg hover:shadow-purple-900/20 transition-shadow duration-500">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Average Discount
+              </CardTitle>
+              <Percent className="h-5 w-5 text-purple-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-white">
+                {averageDiscount}%
+              </div>
+              <p className="text-xs text-gray-400 mt-1">
+                Average savings per game
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
       <div className="mt-3">
         {gameData.length === 0 ? (
           <div className="text-center py-20 bg-gray-900 rounded-lg border border-gray-800">
@@ -237,15 +256,15 @@ export default function SteamDeals() {
               No games imported yet
             </h3>
             <p className="text-gray-500 mt-2 max-w-md mx-auto">
-              Enter your Steam ID and click the "Sync from Steam" button to
-              import your wishlist.
+              Enter your Steam ID and click the "Sync Games" button to import
+              your wishlist.
             </p>
           </div>
         ) : (
           <SteamDealsTable gameData={gameData} />
         )}
       </div>
-      <Toaster /> 
+      <Toaster />
     </div>
   );
 }

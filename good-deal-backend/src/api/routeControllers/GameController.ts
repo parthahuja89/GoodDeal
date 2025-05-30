@@ -77,7 +77,7 @@ route.get("/get-steam-deals", async (req: Request, res: Response) => {
   
   
   try {
-    gameService.getSteamDeals(steamid)
+    gameService.getSteamDeals(req, steamid)
       .then((gameDeals: SteamDeal[]) => {
         res.status(200).json(gameDeals);
       })

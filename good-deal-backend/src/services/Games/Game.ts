@@ -1,12 +1,13 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import axios from "axios";
 import logger from "../logger";
 import { Game } from "../../api/models/Game";
 import GameDeal from "../../api/models/GameDeal";
 import { SteamDeal } from "../../api/models/SteamDeal";
+import { addUserGames } from '../User';
 import dotenv from "dotenv";
-import { platform } from "os";
-import { log } from "console";
+import { User } from '../../../types/db/User';
+
 dotenv.config();
 
 
@@ -164,10 +165,18 @@ export const searchGame = async (gameTitle: string): Promise<Game[]> => {
  * Returns the Steam deals for a given Steam ID
  * @param steamId The Steam ID to fetch deals for
  */
-export const getSteamDeals = async (steamId: string): Promise<SteamDeal[]> => {
+export const getSteamDeals = async (req: Request,  steamId: string): Promise<SteamDeal[]> => {
   try {
     const appIds = await getSteamAppIds(steamId)
-    const [itadIds, dealsPreload] = await convertSteamAppIdsToItadGameIds(appIds.splice(0, 100));
+    const [itadIds, dealsPreload] = await convertSteamAppIdsToItadGameIds(appIds.splice(0, 20));
+
+    //caching user's itad ids
+    if(req.user && req.user.id) {
+      await addUserGames(req.user.id.toString(), itadIds);
+    } else {
+      logger.warn("No user ID found in the request, skipping caching of ITAD IDs.");
+    }
+
     const deals: SteamDeal[] = await fetchPreloadedDeals(itadIds, dealsPreload);
     return deals;
   }
@@ -255,7 +264,6 @@ export const convertSteamAppIdsToItadGameIds = async (appIds: string[]): Promise
  * @param preloadDeals The preloaded Steam deals to fetch prices for
  */
 export const fetchPreloadedDeals = async (itadGameIds: string[], preloadDeals: SteamDeal[]): Promise<SteamDeal[]> => {
-  logger.info(`Fetching best deals for preloaded Steam deals.. Total games: ${itadGameIds.length}`);
   try {
     const response = await axios.post(`${BASE_ITAD_URL}/games/prices/v3`, itadGameIds, {
       params: {

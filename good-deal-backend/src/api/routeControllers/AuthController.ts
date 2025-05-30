@@ -15,6 +15,7 @@ route.get("/token", async (req: Request, res: Response) => {
     return;
   }
   const token = await AuthService.createUserToken(authCode);
+  console.log("token", token)
   if(token == ''){
     res.status(401).json({ error: "Error generating access token. Authorization code may be invalid." });
     return;
