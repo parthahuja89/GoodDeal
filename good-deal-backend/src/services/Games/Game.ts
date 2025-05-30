@@ -6,7 +6,6 @@ import GameDeal from "../../api/models/GameDeal";
 import { SteamDeal } from "../../api/models/SteamDeal";
 import { addUserGames } from '../User';
 import dotenv from "dotenv";
-import { User } from '../../../types/db/User';
 
 dotenv.config();
 
@@ -169,13 +168,14 @@ export const getSteamDeals = async (req: Request,  steamId: string): Promise<Ste
   try {
     const appIds = await getSteamAppIds(steamId)
     const [itadIds, dealsPreload] = await convertSteamAppIdsToItadGameIds(appIds.splice(0, 20));
-
-    //caching user's itad ids
-    if(req.user && req.user.id) {
-      await addUserGames(req.user.id.toString(), itadIds);
-    } else {
-      logger.warn("No user ID found in the request, skipping caching of ITAD IDs.");
+    if(req.user) 
+    {
+      await addUserGames(req.user?.id.toString(), itadIds);
+      logger.info(`Added ${itadIds.length} games to user ${req.user.id}'s library.`);
     }
+  
+    
+
 
     const deals: SteamDeal[] = await fetchPreloadedDeals(itadIds, dealsPreload);
     return deals;

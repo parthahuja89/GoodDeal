@@ -3,20 +3,37 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
+
     "configurations": [
-        
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Frontend",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/good-deal-frontend",
+            "sourceMapPathOverrides": {
+                "/src/*": "${webRoot}/*"
+            },
+            "preLaunchTask": "npm: dev"
+        },
         
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
+            "name": "Backend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev"
             ],
-            "program": "${workspaceFolder}/good-deal-backend/",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
+            "cwd": "${workspaceFolder}/good-deal-backend",
+            "console": "integratedTerminal",
+            "sourceMapPathOverrides": {
+                "/src/*": "${workspaceFolder}/good-deal-backend/src/*"
+            },
+            "env": {
+                "NODE_ENV": "development"
+            }
         }
     ]
 }

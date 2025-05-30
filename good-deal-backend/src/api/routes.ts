@@ -8,6 +8,6 @@ const router: Router = express.Router();
 
 // Route imports
 router.use('/auth', AuthController);
-router.use('/games', GameController);
+router.use('/games', authenticateWithToken, GameController);
 
 export default router;

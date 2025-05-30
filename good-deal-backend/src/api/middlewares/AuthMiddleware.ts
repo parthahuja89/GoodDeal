@@ -53,7 +53,8 @@ async function authenticateWithToken(
     const user = await obtainDBUser(payload);
 
     // Attaching user to the request object for downstream handlers
-    (req as any).user = user;
+    req.user = user;
+    
 
     next();
   } catch (err) {
