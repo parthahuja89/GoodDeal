@@ -20,10 +20,12 @@ const styles = {
 
 
 export default function LoginCallback() {
+
     const [showError, setShowError] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect( () => {
+      console.log('LoginCallback component mounted');
         (async () => {
             await extractAuthCode();
         })();
@@ -38,6 +40,8 @@ export default function LoginCallback() {
         else{
           try {
             await Auth.getTokenFromCode(authCode)
+            window.location.href = '/Home';
+
           } catch (error) {
             setShowError(true)
           }

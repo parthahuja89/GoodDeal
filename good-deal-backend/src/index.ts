@@ -7,8 +7,10 @@ import router from "./api/routes";
 
 dotenv.config();
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
 
 const app: Express = express();
+app.use(cookieParser());
 const port = process.env.PORT || 3000;
 
 //cors policy 

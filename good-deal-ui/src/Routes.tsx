@@ -1,4 +1,4 @@
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Landing from "./components/LandingPage/Landing";
 import LoginPage from "./components/Login/Login";
 import LoginCallback from "./components/Login/LoginCallback";
@@ -8,7 +8,27 @@ import Layout from "./components/layout";
 import NotFound from "./components/Misc/NotFound";
 import { ThemeProvider } from "next-themes";
 import SteamDeals from "./components/SteamDeals/SteamDeals";
+import { useContext } from "react";
+import AuthContext from "./contexts/authContext";
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  console.log("ProtectedRoute rendered");
+
+  const { isAuthenticated, isLoading } = useContext(AuthContext);
+  console.log("isAuthenticated:", isAuthenticated, "isLoading:", isLoading);
+  if (isLoading) {
+    return; 
+  }
+
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+
+export { ProtectedRoute };
 const AppRoutes = () => (
   <Routes>
     {/* Public Routes */}
@@ -18,7 +38,9 @@ const AppRoutes = () => (
 
     {/* Protected Dashboard Routes - with sidebar */}
     <Route
+      
       element={
+        <ProtectedRoute>
         <Layout>
           <ThemeProvider
             attribute="class"
@@ -29,6 +51,7 @@ const AppRoutes = () => (
             <Outlet />
           </ThemeProvider>
         </Layout>
+        </ProtectedRoute>
       }
     >
       

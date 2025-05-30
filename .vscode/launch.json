@@ -6,15 +6,22 @@
 
     "configurations": [
         {
-            "type": "chrome",
+            "type": "node",
             "request": "launch",
             "name": "Frontend",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/good-deal-frontend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}/good-deal-ui",
+            "console": "integratedTerminal",
             "sourceMapPathOverrides": {
-                "/src/*": "${webRoot}/*"
+                "/src/*": "${workspaceFolder}/good-deal-ui/src/*"
             },
-            "preLaunchTask": "npm: dev"
+            "env": {
+                "NODE_ENV": "development"
+            }
         },
         
         {

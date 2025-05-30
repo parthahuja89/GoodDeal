@@ -25,12 +25,29 @@ export function redirectToGoogleAuth() {
     window.location.href = googleAuthUrl;
 }
 
+//Gets the current auth status from API
+export async function getAuthStatus(): Promise<boolean> {
+    try {
+        console.log("Checking authentication status...");
+        const response: AxiosResponse = await axios.get(`${baseApiUri}/api/auth/status`, {
+            withCredentials: true
+        });
+        console.log(response.status);
+        return response.status === 200;
+    } catch (error) {
+        console.error("Error fetching auth status:", error);
+        return false;
+    }
+}
+
 //Gets the token from API by exchanging auth code
 export async function getTokenFromCode(authCode: string) {
     await axios.get(`${baseApiUri}/api/auth/token`, {
+        withCredentials: true,
         headers: {
             auth_code: authCode
         }
+
     })       
 }
 export default redirectToGoogleAuth;

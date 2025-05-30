@@ -14,13 +14,16 @@ import Dashboard from "./components/Dashboard/dashboard";
 import Layout from "./components/layout";
 import { ThemeProvider } from "next-themes";
 import AppRoutes from "./Routes";
+import { AuthProvider } from "./contexts/authContext";
 
 import NotFound from "./components/Misc/NotFound";
 
 function App() {
   return (
     <Router>
+    <AuthProvider>
       <AppRoutes />
+      </AuthProvider>
     </Router>
   );
 }

@@ -6,7 +6,7 @@ import { SteamDeal } from '@/models/SteamDeal';
 
 export async function fetchGameDeals(): Promise<GameDeal[]> {
     try {
-        const response = await axios.get('http://localhost:3000/api/games/get-games');
+        const response = await axios.get('http://localhost:3000/api/games/get-games',  {withCredentials: true});
         return response.data as GameDeal[];
     } catch (error) {
         throw error;
@@ -15,7 +15,7 @@ export async function fetchGameDeals(): Promise<GameDeal[]> {
 
 export async function fetchGame(id: string): Promise<Game> {
     try {
-        const response = await axios.get(`http://localhost:3000/api/games/get-game/${id}`);
+        const response = await axios.get(`http://localhost:3000/api/games/get-game/${id}`, {withCredentials: true});
         return response.data as Game;
     } catch (error) {
         throw error;

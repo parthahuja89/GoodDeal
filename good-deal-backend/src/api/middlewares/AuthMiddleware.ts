@@ -33,14 +33,14 @@ async function authenticateWithToken(
   next: NextFunction
 ): Promise<void> {
 
-  const authHeader = req.headers.authorization;
+  
 
-  if (!authHeader?.startsWith("Bearer ")) {
-    res.status(401).json({ error: "Missing or malformed token" });
+  
+  const token = req.cookies.auth_token;
+  if (!token) {
+    res.status(401).json({ error: "No authentication token provided." });
     return;
   }
-
-  const token = authHeader.split(" ")[1];
 
   try {
     const payload = await verifyToken(token);

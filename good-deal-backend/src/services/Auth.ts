@@ -2,7 +2,9 @@ import Resources from '../resources.json'
 import logger from './logger'
 import axios from 'axios'
 import qs from 'qs'
+import { OAuth2Client, TokenPayload } from "google-auth-library";
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
  * Generates an authentication token from the provided authorization code.
@@ -51,3 +53,23 @@ export async function createUserToken(authCode: string): Promise<string> {
         return '';
     }
 }
+
+/**
+ * Validates a provided authentication token and returns true if valid, false otherwise.
+ * @param authToken - The authentication token to validate.
+ * @returns A boolean indicating whether the token is valid.
+ */
+
+export async function validateAuthToken(authToken: string): Promise<boolean> {
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: authToken,
+            audience: process.env.G_AUTH_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        return payload !== null;
+    } catch (error) {
+        return false;
+    }
+}
+
