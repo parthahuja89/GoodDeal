@@ -1,6 +1,8 @@
 {
     "urls":{
         "google_oauth_api": "https://oauth2.googleapis.com",
-        "redirect_uri": "http://localhost:5173/callback"
+        "redirect_uri": "http://localhost:5173/callback",
+        "base_steam_uri":"https://api.steampowered.com",
+        "base_itad_uri": "https://api.isthereanydeal.com"
     }
 }

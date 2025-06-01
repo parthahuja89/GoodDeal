@@ -6,13 +6,12 @@ import GameDeal from "../../api/models/GameDeal";
 import { SteamDeal } from "../../api/models/SteamDeal";
 import { addUserGames } from '../User';
 import dotenv from "dotenv";
+import Resources from '../../resources.json'
 
 dotenv.config();
 
 
 const ITAD_API_KEY = process.env.ITAD_API_KEY ?? "";
-const BASE_ITAD_URL = "https://api.isthereanydeal.com";
-const BASE_STEAM_URL = "https://api.steampowered.com";
 
 if (!ITAD_API_KEY) {
   logger.error("ITAD_API_KEY is not defined in the environment variables.");
@@ -27,7 +26,7 @@ export const getPopularGames = async (
   limit: number = 12
 ): Promise<GameDeal[]> => {
   try {
-    const response = await axios.get(`${BASE_ITAD_URL}/deals/v2`, {
+    const response = await axios.get(`${Resources.urls.base_itad_uri}/deals/v2`, {
       params: {
         key: ITAD_API_KEY,
         limit,
@@ -60,7 +59,7 @@ export const getPopularGames = async (
  */
 export const getGameInfo = async (gameId: string): Promise<Game> => {
   try {
-    const response = await axios.get(`${BASE_ITAD_URL}/games/info/v2`, {
+    const response = await axios.get(`${Resources.urls.base_itad_uri}/games/info/v2`, {
       params: {
         key: ITAD_API_KEY,
         id: gameId,
@@ -102,7 +101,7 @@ export const getGameInfo = async (gameId: string): Promise<Game> => {
  */
 export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
   try {
-    const response = await axios.post(`${BASE_ITAD_URL}/games/prices/v3`, [gameId],{
+    const response = await axios.post(`${Resources.urls.base_itad_uri}/games/prices/v3`, [gameId],{
       params: {
       key: ITAD_API_KEY,
       }
@@ -137,7 +136,7 @@ export const getGamePrices = async (gameId: string): Promise<GameDeal[]> => {
  */
 export const searchGame = async (gameTitle: string): Promise<Game[]> => {
   try {
-    const response = await axios.get(`${BASE_ITAD_URL}/games/search/v1`, {
+    const response = await axios.get(`${Resources.urls.base_itad_uri}/games/search/v1`, {
       params: {
         key: ITAD_API_KEY,
         title: gameTitle,
@@ -196,7 +195,7 @@ export const getSteamDeals = async (req: Request,  steamId: string): Promise<Ste
 export const getSteamAppIds = async (steamId: string): Promise<string[]> => {
   try {
     logger.info(`Fetching Steam app IDs for user ID: ${steamId}`);
-    const response = await axios.get(`${BASE_STEAM_URL}/IWishlistService/GetWishlist/v1`, {
+    const response = await axios.get(`${Resources.urls.base_steam_uri}/IWishlistService/GetWishlist/v1`, {
       params: { steamid: steamId },
     });
 
@@ -228,7 +227,7 @@ export const convertSteamAppIdsToItadGameIds = async (appIds: string[]): Promise
 
   const itadRequests = appIds.map(async (appId) => {
     try {
-      const response = await axios.get(`${BASE_ITAD_URL}/games/lookup/v1`, {
+      const response = await axios.get(`${Resources.urls.base_itad_uri}/games/lookup/v1`, {
         params: {
           key: ITAD_API_KEY,
           appid: appId,
@@ -265,7 +264,7 @@ export const convertSteamAppIdsToItadGameIds = async (appIds: string[]): Promise
  */
 export const fetchPreloadedDeals = async (itadGameIds: string[], preloadDeals: SteamDeal[]): Promise<SteamDeal[]> => {
   try {
-    const response = await axios.post(`${BASE_ITAD_URL}/games/prices/v3`, itadGameIds, {
+    const response = await axios.post(`${Resources.urls.base_itad_uri}/games/prices/v3`, itadGameIds, {
       params: {
         key: ITAD_API_KEY,
       },

@@ -2,6 +2,8 @@ import React, { createContext, useEffect, useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { getAuthStatus } from "@/Services/Auth";
 
+//Currently not using this authContext
+//Keeping this here in case want to add conditional rendering in the future
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean; // Add loading state

@@ -11,18 +11,16 @@ import SteamDeals from "./components/SteamDeals/SteamDeals";
 import { useContext } from "react";
 import AuthContext from "./contexts/authContext";
 
+//These routes can only be triggered if you're not already logged in
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   console.log("ProtectedRoute rendered");
 
   const { isAuthenticated, isLoading } = useContext(AuthContext);
-  console.log("isAuthenticated:", isAuthenticated, "isLoading:", isLoading);
   if (isLoading) {
     return; 
   }
-
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+  if (isAuthenticated) {
+    return <Navigate to="/home" />;
   }
 
   return children;
@@ -32,6 +30,7 @@ export { ProtectedRoute };
 const AppRoutes = () => (
   <Routes>
     {/* Public Routes */}
+
     <Route path="/" element={<Landing />} />
     <Route path="/login" element={<LoginPage />} />
     <Route path="/callback" element={<LoginCallback />} />
@@ -40,7 +39,7 @@ const AppRoutes = () => (
     <Route
       
       element={
-        <ProtectedRoute>
+        
         <Layout>
           <ThemeProvider
             attribute="class"
@@ -51,7 +50,6 @@ const AppRoutes = () => (
             <Outlet />
           </ThemeProvider>
         </Layout>
-        </ProtectedRoute>
       }
     >
       

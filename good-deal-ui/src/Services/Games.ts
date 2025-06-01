@@ -1,12 +1,12 @@
 import { searchGame } from './../../../.history/good-deal-backend/src/services/Games/Game_20250517192621';
-import axios from 'axios';
 import GameDeal from '../models/GameDeal';
 import { Game } from '../models/Game';
 import { SteamDeal } from '@/models/SteamDeal';
+import axiosApiInstance from '@/contexts/AxiosApiInstance';
 
 export async function fetchGameDeals(): Promise<GameDeal[]> {
     try {
-        const response = await axios.get('http://localhost:3000/api/games/get-games',  {withCredentials: true});
+        const response = await axiosApiInstance.get('/api/games/get-games',  {withCredentials: true});
         return response.data as GameDeal[];
     } catch (error) {
         throw error;
@@ -15,7 +15,7 @@ export async function fetchGameDeals(): Promise<GameDeal[]> {
 
 export async function fetchGame(id: string): Promise<Game> {
     try {
-        const response = await axios.get(`http://localhost:3000/api/games/get-game/${id}`, {withCredentials: true});
+        const response = await axiosApiInstance.get(`/api/games/get-game/${id}`, {withCredentials: true});
         return response.data as Game;
     } catch (error) {
         throw error;
@@ -24,7 +24,7 @@ export async function fetchGame(id: string): Promise<Game> {
 
 export async function fetchGameDealsById(id: string): Promise<GameDeal[]> {
     try {
-        const response = await axios.get(`http://localhost:3000/api/games/get-game-prices/${id}`);
+        const response = await axiosApiInstance.get(`/api/games/get-game-prices/${id}`);
         return response.data as GameDeal[];
     } catch (error) {
         throw error;
@@ -33,7 +33,7 @@ export async function fetchGameDealsById(id: string): Promise<GameDeal[]> {
 
 export async function searchGames(searchTerm: string): Promise<Game[]> {
     try {
-        const response = await axios.get(`http://localhost:3000/api/games/search-game/${searchTerm}`);
+        const response = await axiosApiInstance.get(`/api/games/search-game/${searchTerm}`);
         return response.data as Game[];
     } catch (error) {
         throw error;
@@ -42,7 +42,7 @@ export async function searchGames(searchTerm: string): Promise<Game[]> {
 
 export async function syncSteamWishlist(steamId: string): Promise<SteamDeal[]> {
     try {
-        const response = await axios.get(`http://localhost:3000/api/games/get-steam-deals?steamid=${steamId}`)
+        const response = await axiosApiInstance.get(`/api/games/get-steam-deals?steamid=${steamId}`)
         console.log(response)
         return response.data as SteamDeal[]
 
