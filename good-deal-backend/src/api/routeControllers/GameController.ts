@@ -72,20 +72,20 @@ route.get("/search-game/:name", async (req: Request, res: Response) => {
   }
 });
 
-route.get("/get-steam-deals", async (req: Request, res: Response) => {
-  const steamid = req.query.steamid as string;
+// route.get("/get-steam-deals", async (req: Request, res: Response) => {
+//   const steamid = req.query.steamid as string;
   
   
-  try {
-    gameService.getSteamDeals(req, steamid)
-      .then((gameDeals: SteamDeal[]) => {
-        res.status(200).json(gameDeals);
-      })
-      .catch((error: any) => {
-        res.status(500).json({ error: error.message });
-      });
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-});
+//   try {
+//     gameService.getSteamDeals(req, steamid)
+//       .then((gameDeals: SteamDeal[]) => {
+//         res.status(200).json(gameDeals);
+//       })
+//       .catch((error: any) => {
+//         res.status(500).json({ error: error.message });
+//       });
+//   } catch (error: any) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 export default route;

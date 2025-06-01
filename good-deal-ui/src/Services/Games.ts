@@ -40,10 +40,9 @@ export async function searchGames(searchTerm: string): Promise<Game[]> {
     }
 }
 
-export async function syncSteamWishlist(steamId: string): Promise<SteamDeal[]> {
-    try {
-        const response = await axiosApiInstance.get(`/api/games/get-steam-deals?steamid=${steamId}`)
-        console.log(response)
+export async function getGameDeals():Promise<SteamDeal[]>{
+        try {
+        const response = await axiosApiInstance.get(`/api/user/get-user-deals`)
         return response.data as SteamDeal[]
 
     } catch (error) {
@@ -51,11 +50,24 @@ export async function syncSteamWishlist(steamId: string): Promise<SteamDeal[]> {
     }
 }
 
+export async function syncSteamWishlist(steamId: string): Promise<void> {
+    try {
+        await axiosApiInstance.patch(`/api/user/update-user-steam?steamid=${steamId}`)
+    } catch (error) {
+        throw error;
+    }
+}
+
 export function calculateGameSavings(deals: SteamDeal[]) {
+    console.log('deals', deals)
+    console.log('savings')
     const totalSavings = deals
         .reduce((acc, deal) => acc + Math.max(0, deal.steam_price - deal.best_price), 0);
 
+    
+
     const validDeals = deals.filter(deal => Number(deal.steam_price) > 0);
+    console.log(validDeals)
 
     const averageDiscount = validDeals.length > 0
         ? validDeals.reduce((acc, deal) => {
@@ -63,7 +75,7 @@ export function calculateGameSavings(deals: SteamDeal[]) {
             return acc + Math.max(0, discount);
         }, 0) / validDeals.length
         : 0;
-
+    
     return [
         Number(totalSavings.toFixed(2)),
         Number(averageDiscount.toFixed(2))

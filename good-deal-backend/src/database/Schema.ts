@@ -18,3 +18,9 @@ export const user_games = pgTable("user_games", {
   user_id: varchar("user_id", { length: 255 }),
   game_id: varchar("game_id", { length: 255 }),
 });
+
+export const game_meta_data = pgTable("game_meta_data", {
+  game_id: varchar("game_id", { length: 255 }).primaryKey(),
+  asset_url: varchar("asset_url", { length: 255 }),
+  title: varchar("title", { length: 255 }),
+});

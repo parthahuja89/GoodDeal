@@ -5,8 +5,10 @@ import { Game } from "../../api/models/Game";
 import GameDeal from "../../api/models/GameDeal";
 import { SteamDeal } from "../../api/models/SteamDeal";
 import { addUserGames } from '../User';
+import { db } from '../../database/db';
 import dotenv from "dotenv";
 import Resources from '../../resources.json'
+import { game_meta_data } from '../../database/Schema';
 
 dotenv.config();
 
@@ -159,31 +161,27 @@ export const searchGame = async (gameTitle: string): Promise<Game[]> => {
   }
 }
 
-/**
- * Returns the Steam deals for a given Steam ID
- * @param steamId The Steam ID to fetch deals for
- */
-export const getSteamDeals = async (req: Request,  steamId: string): Promise<SteamDeal[]> => {
-  try {
-    const appIds = await getSteamAppIds(steamId)
-    const [itadIds, dealsPreload] = await convertSteamAppIdsToItadGameIds(appIds.splice(0, 20));
-    if(req.user) 
-    {
-      await addUserGames(req.user?.id.toString(), itadIds);
-      logger.info(`Added ${itadIds.length} games to user ${req.user.id}'s library.`);
-    }
-  
-    
 
+// /**
+//  * Returns the Steam deals for a given Steam ID
+//  * @param steamId The Steam ID to fetch deals for
+//  */
+// export const getSteamDeals = async (req: Request,  steamId: string): Promise<SteamDeal[]> => {
+//   try {
+//     if (!req.user || !req.user?.id) {
+//       throw new Error('User ID is required');
+//     }
+//     const appIds = await getUserGames(req.user?.id.toString()) || [];
+//     const [itadIds, dealsPreload] = await convertSteamAppIdsToItadGameIds(appIds);
 
-    const deals: SteamDeal[] = await fetchPreloadedDeals(itadIds, dealsPreload);
-    return deals;
-  }
-  catch (error) {
-    logger.error("Error fetching Steam app IDs:", error);
-    throw error;
-  }
-}
+//     const deals: SteamDeal[] = await fetchPreloadedDeals(itadIds, dealsPreload);
+//     return deals;
+//   }
+//   catch (error) {
+//     logger.error("Error fetching Steam app IDs:", error);
+//     throw error;
+//   }
+// }
     
 
 
@@ -217,44 +215,58 @@ export const getSteamAppIds = async (steamId: string): Promise<string[]> => {
 
 /**
  * Converts a Steam app ID to a ITAD game ID
+ * Updates the database with the metadata
  * @param appIds The Steam app ID array to convert
  * TODO: Add a cache to avoid multiple requests for the same app ID
  */
-export const convertSteamAppIdsToItadGameIds = async (appIds: string[]): Promise<[string[], SteamDeal[]]> => {
+export const convertSteamAppIdsToItadGameIds = async (appIds: string[]): Promise<string[]> => {
   const itadGameIds: string[] = [];
-  //Preloaded game info without prices
-  const dealsPreload: SteamDeal[] = [];
+  const gameData: SteamDeal[] = [];
 
-  const itadRequests = appIds.map(async (appId) => {
-    try {
-      const response = await axios.get(`${Resources.urls.base_itad_uri}/games/lookup/v1`, {
-        params: {
-          key: ITAD_API_KEY,
-          appid: appId,
-        },
-      });
-
-      const data = response.data;
-
-      if (data && data.game && data.game.id) {
-        itadGameIds.push(data.game.id);
-        dealsPreload.push({
-          itad_id: data.game.id,
-          asset_url: data.game.assets?.banner600 || data.game.assets?.banner400,
-          title: data.game.title,
-          best_price: 0, 
-          steam_price: 0,
+  try {
+    const itadRequests = appIds.map(async (appId) => {
+      try {
+        const response = await axios.get(`${Resources.urls.base_itad_uri}/games/lookup/v1`, {
+          params: {
+            key: ITAD_API_KEY,
+            appid: appId,
+          },
         });
-      } else {
-        logger.warn(`No ITAD game ID found for Steam app ID: ${appId}`);
-      }
-    } catch (error) {
-      logger.error(`Error converting Steam app ID ${appId} to ITAD game ID: ${error}`);
-    }
-  });
 
-  await Promise.all(itadRequests);
-  return [itadGameIds, dealsPreload];
+        const data = response.data;
+
+        if (data?.game?.id) {
+          itadGameIds.push(data.game.id);
+          gameData.push({
+            itad_id: data.game.id,
+            asset_url: data.game.assets?.banner600 || data.game.assets?.banner400 || null,
+            title: data.game.title,
+          });
+        } else {
+          logger.warn(`No ITAD game ID found for Steam app ID: ${appId}`);
+        }
+      } catch (error) {
+        logger.error(`Error converting Steam app ID ${appId} to ITAD game ID: ${error}`);
+        throw error;
+      }
+    });
+
+    await Promise.all(itadRequests);
+
+    if (gameData.length > 0) {
+      await db.insert(game_meta_data).values(
+        gameData.map((game) => ({
+          game_id: game.itad_id,
+          asset_url: game.asset_url,
+          title: game.title,
+        }))
+      ).onConflictDoNothing({ target: [game_meta_data.game_id] });
+    }
+  } catch (error) {
+    logger.error(`Unexpected error during ITAD conversion process: ${error}`);
+  }
+
+  return itadGameIds;
 };
 
 
