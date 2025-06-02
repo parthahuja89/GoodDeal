@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Search, ShoppingBag, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,9 @@ export default function GameSearchPage() {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
   const [isLoadingTopDeals, setIsLoadingTopDeals] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Fetch top deals on initial load
   useEffect(() => {
@@ -48,6 +51,7 @@ export default function GameSearchPage() {
     const fetchSearchResults = async () => {
       if (!debouncedQuery) {
         setSearchResults([]);
+        setShowResults(false);
         setIsLoadingSearch(false);
         return;
       }
@@ -56,6 +60,7 @@ export default function GameSearchPage() {
         setIsLoadingSearch(true);
         const data = await searchGames(debouncedQuery);
         setSearchResults(data);
+        setShowResults(true);
       } catch (error) {
         console.error("Error searching for games:", error);
       } finally {
@@ -65,6 +70,32 @@ export default function GameSearchPage() {
 
     fetchSearchResults();
   }, [debouncedQuery]);
+
+  // Handle click outside to close search results
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+    setShowResults(false);
+  };
+
+  const handleInputFocus = () => {
+    if (searchResults.length > 0) {
+      setShowResults(true);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12  text-gray-100 min-h-screen">
@@ -78,64 +109,65 @@ export default function GameSearchPage() {
           </span>
         </h1>
 
-        <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-2xl">
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-              <AnimatePresence mode="wait">
-                {isLoadingSearch ? (
-                  <motion.div
-                    key="loader"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="search"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    <Search className="h-5 w-5" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </span>
-            <Input
-              type="text"
-              placeholder="Start typing to search for games..."
-              className="w-full h-14 pl-12 pr-12 text-lg rounded-lg border-2 card text-white placeholder:text-white"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+        <div ref={searchContainerRef} className="w-full max-w-2xl relative">
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <AnimatePresence mode="wait">
+                  {isLoadingSearch ? (
+                    <motion.div
+                      key="loader"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="search"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      <Search className="h-5 w-5" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </span>
+              <Input
+                type="text"
+                placeholder="Start typing to search for games..."
+                className="w-full h-14 pl-12 pr-12 text-lg rounded-lg border-2 card text-white placeholder:text-white"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={handleInputFocus}
+              />
 
-            {searchQuery && (
-              <Button
-                variant={"outline"}
-                size="icon"
-                className="absolute right-2 top-2 h-10 w-10 flex items-center justify-center gap-1"
-                onClick={() => {
-                  setSearchQuery("");
-                  setSearchResults([]);
-                }}
-              >
-                <X className="h-5 w-5" />
-                <span className="sr-only">Clear</span>
-              </Button>
-            )}
-          </div>
-        </form>
+              {searchQuery && (
+                <Button
+                  variant={"outline"}
+                  size="icon"
+                  className="absolute right-2 top-2 h-10 w-10 flex items-center justify-center gap-1"
+                  onClick={handleClearSearch}
+                >
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Clear</span>
+                </Button>
+              )}
+            </div>
+          </form>
+
+          {showResults && searchResults.length > 0 && (
+            <div className="absolute top-full mt-2 w-full z-50">
+              <SearchResults games={searchResults} />
+            </div>
+          )}
+        </div>
       </div>
 
-      {searchResults.length > 0 && (
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-full max-w-4xl z-50">
-          <SearchResults games={searchResults} />
-        </div>
-      )}
       <div className="mt-8">
         <h2 className="text-2xl font-bold mb-6 text-white">Top Game Deals</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

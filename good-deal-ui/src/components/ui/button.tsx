@@ -12,11 +12,11 @@ const buttonVariants = cva(
         default:
           "bg-purple-500 hover:bg-purple-600 text-white hover:text-white transition-all duration-300",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "border border-destructive bg-background text-destructive shadow-sm hover:bg-destructive/10 hover:text-destructive",
         outline:
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
-        "bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-900 transition-all duration-300",
+          "bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-900 transition-all duration-300",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
@@ -53,6 +53,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 )
 Button.displayName = "Button"
-
 
 export { Button, buttonVariants }

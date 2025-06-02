@@ -32,10 +32,6 @@ async function authenticateWithToken(
   res: Response,
   next: NextFunction
 ): Promise<void> {
-
-  
-
-  
   const token = req.cookies.auth_token;
   if (!token) {
     res.status(401).json({ error: "No authentication token provided." });
@@ -51,9 +47,14 @@ async function authenticateWithToken(
     }
 
     const user = await obtainDBUser(payload);
-
+    if (!user?.id) {
+      res.status(401).json({ error: "User has no ID." });
+      return;
+    }
     // Attaching user to the request object for downstream handlers
     req.user = user;
+
+
     
 
     next();
@@ -95,5 +96,6 @@ async function obtainDBUser(payload: TokenPayload) {
 
   return newUser;
 }
+
 
 export { authenticateWithToken };

@@ -10,6 +10,7 @@ import { ThemeProvider } from "next-themes";
 import SteamDeals from "./components/SteamDeals/SteamDeals";
 import { useContext } from "react";
 import AuthContext from "./contexts/authContext";
+import Settings from "./components/Settings";
 
 //These routes can only be triggered if you're not already logged in
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -56,6 +57,7 @@ const AppRoutes = () => (
       <Route path="home" element={<Dashboard />} />
       <Route path="game/:game_id" element={<GameView />} />
       <Route path="steam-deals" element={<SteamDeals />} />
+      <Route path="settings" element={<Settings/>} />
     
     </Route>
 

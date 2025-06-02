@@ -32,7 +32,7 @@ export const getPopularGames = async (
       params: {
         key: ITAD_API_KEY,
         limit,
-        sort: "-trending",
+        sort: "rank",
       },
     });
 

@@ -11,7 +11,7 @@ export type NewUser = InferInsertModel<typeof Schema.users>;
 declare global {
   namespace Express {
     interface Request {
-      user?: User | undefined; 
+      user?: User; 
     }
   }
 }

@@ -4,40 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, SpellCheck2 } from "lucide-react";
 import { Game } from "@/models/Game";
 
-// Temporary data
-// const results = [
-//   {
-//     title: "Cyberpunk 2077",
-//     id: "018d937f-2997-7131-b8b9-7c8af4825fa8",
-//     asset_url:
-//       "https://assets.isthereanydeal.com/018d937f-2997-7131-b8b9-7c8af4825fa8/banner600.jpg?t=1746524713",
-//   },
-//   {
-//     title: "VA-11 Hall-A: Cyberpunk Bartender Action",
-//     id: "018d937f-2998-7044-874d-26ecb30c4e4b",
-//     asset_url:
-//       "https://assets.isthereanydeal.com/018d937f-2998-7044-874d-26ecb30c4e4b/banner600.jpg?t=1732216812",
-//   },
-//   {
-//     title: "E.Y.E: Divine Cybermancy",
-//     id: "01939826-74c9-7352-9adc-79f40dfa92b2",
-//     asset_url:
-//       "https://assets.isthereanydeal.com/01939826-74c9-7352-9adc-79f40dfa92b2/banner600.jpg?t=1733437583",
-//   },
-//   {
-//     title: "Bomb Rush Cyberfunk",
-//     id: "018d937f-443d-7383-bede-c4e0d42b7cfd",
-//     asset_url:
-//       "https://assets.isthereanydeal.com/018d937f-443d-7383-bede-c4e0d42b7cfd/banner600.jpg?t=1732737306",
-//   },
-//   {
-//     title: "Cyberpunk 2077: Phantom Liberty",
-//     id: "018d937f-6ed7-7164-8fc3-5390f976e531",
-//     asset_url:
-//       "https://assets.isthereanydeal.com/018d937f-6ed7-7164-8fc3-5390f976e531/banner600.jpg?t=1746524721",
-//   },
-// ];
-
 interface SearchResultsProps {
   games: Game[];
 }
@@ -165,12 +131,12 @@ export default function SearchResults({ games }: SearchResultsProps) {
                     transition={{ duration: 0.2 }}
                     className="flex-shrink-0 mr-2"
                   >
-                    <ChevronRight className="h-5 w-5 text-cyan-400" />
+                    <ChevronRight className="h-5 w-5 text-purple-500" />
                   </motion.div>
                 </div>
 
                 <motion.div
-                  className="absolute left-0 top-0 bottom-0 w-1 bg-cyan-500"
+                  className="absolute left-0 top-0 bottom-0 w-1 bg-purple-400"
                   initial={{ scaleY: 0 }}
                   animate={{
                     scaleY: selectedId === index.toString() ? 1 : 0,
@@ -181,7 +147,7 @@ export default function SearchResults({ games }: SearchResultsProps) {
 
                 {selectedId === index.toString() && (
                   <motion.div
-                    className="absolute inset-0 bg-cyan-500 pointer-events-none"
+                    className="absolute inset-0 bg-purple-500 pointer-events-none"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.05 }}
                     exit={{ opacity: 0 }}

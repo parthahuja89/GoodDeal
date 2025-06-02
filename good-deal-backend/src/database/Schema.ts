@@ -6,6 +6,7 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).notNull(),
   name: varchar("name", { length: 255 }),
   picture: text("picture"),
+  steam_id: varchar("steam_id", { length: 255 }),
 });
 
 

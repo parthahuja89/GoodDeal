@@ -1,6 +1,7 @@
 import { SteamDeal } from "../api/models/SteamDeal";
+import User from "../api/models/User";
 import { db } from "../database/db";
-import { game_meta_data, user_games } from "../database/Schema";
+import { game_meta_data, user_games, users } from "../database/Schema";
 import { convertSteamAppIdsToItadGameIds, fetchPreloadedDeals, getSteamAppIds } from "./Games/Game";
 import { eq, inArray } from "drizzle-orm";
 
@@ -33,6 +34,11 @@ export async function addUserGames(
         game_id: game_id,
       }))
     );
+
+    //update user steam id in db
+    await db.update(users)
+      .set({ steam_id: steam_user_id })
+      .where(eq(users.id, parseInt(user_id)));
   } catch (error) {
     console.error("Error adding user games:", error);
     throw error;
@@ -72,3 +78,49 @@ export async function getUserDeals(user_id: string): Promise<SteamDeal []> {
     throw error;
   }
 }
+
+export async function getUserInfo(user_id: string): Promise<User> {
+  try {
+    const [userInfo] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, parseInt(user_id)));
+    
+    if (!userInfo) {
+      throw new Error("User not found");
+    }
+    
+    return {
+      Firstname: userInfo.name?.split(' ')[0] ?? '',
+      Lastname: userInfo.name?.split(' ')[1] ?? '',
+      email: userInfo.email,
+      picture_url: userInfo.picture ?? '',
+      steam_id: userInfo.steam_id ?? '',
+    };
+  } catch (error) {
+    console.error("Error fetching user info:", error);
+    throw error;
+  }
+}
+
+export async function updateUserInfo(user_id: string, userInfo: User): Promise<void> {
+  try {
+    const updateData: Partial<typeof users.$inferInsert> = {};
+
+    if (userInfo.Firstname !== undefined || userInfo.Lastname !== undefined) {
+      updateData.name = `${userInfo.Firstname || ""} ${userInfo.Lastname || ""}`.trim();
+    }
+    
+    if (userInfo.steam_id !== undefined) {
+      updateData.steam_id = userInfo.steam_id;
+    }
+    
+    if (Object.keys(updateData).length > 0) {
+      await db.update(users).set(updateData).where(eq(users.id, parseInt(user_id)));
+    }
+  } catch (error) {
+    console.error("Error updating user info:", error);
+    throw error;
+  }
+}
+
