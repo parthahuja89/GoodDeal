@@ -29,9 +29,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import getUserInfo, { saveUserInfo } from "@/Services/User";
 import User from "@/models/User";
-// Import your Redux actions
-import { setUser, updateUser } from "@/store/slices/userSlice";
 import { RootState } from "@/store/redux";
+import { setUser } from "@/store/slices/userSlice";
 
 interface FormData {
   firstName: string;
@@ -45,39 +44,25 @@ interface DeleteFormData {
 }
 
 export default function Settings() {
-  const dispatch = useDispatch();
   const userData = useSelector((state: RootState) => state.user.userData);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  
+  const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm<FormData>();
   const { register: registerDelete, handleSubmit: handleDeleteSubmit, formState: { errors: deleteErrors }, watch } = useForm<DeleteFormData>();
 
   const confirmEmail = watch("confirmEmail");
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await getUserInfo();
-        // Update Redux store with user data
-        dispatch(setUser(res));
-        reset({
-          firstName: res.Firstname || "",
-          lastName: res.Lastname || "",
-          steamId: res.steam_id || "",
-          email: res.email || ""
-        });
-      } catch (error) {
-        toast({
-          title: "Error loading user data",
-          variant: "destructive"
-        });
-      }
-    };
-    fetchUserInfo();
-  }, [dispatch, reset, toast]);
+    reset({
+      firstName: userData.Firstname || "",
+      lastName: userData.Lastname || "",
+      steamId: userData.steam_id || "",
+      email: userData.email || ""
+    });
+  }, [reset, userData, toast]);
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -89,12 +74,11 @@ export default function Settings() {
         Lastname: data.lastName,
         steam_id: data.steamId,
       };
-
-      // Update Redux store
-      dispatch(updateUser(updatedUserData));
       
       // Save to backend
       await saveUserInfo(updatedUserData);
+      //Update redux with new user data
+      await updateRedux();
 
       toast({
         title: "User updated successfully",
@@ -125,14 +109,6 @@ export default function Settings() {
       // Add your delete account API call here
       // await deleteUserAccount();
       
-      // Clear user from Redux store
-      dispatch(setUser({
-        Firstname: "",
-        Lastname: "",
-        picture_url: "",
-        email: "",
-      }));
-      
       toast({
         title: "Account deleted successfully",
       });
@@ -149,6 +125,11 @@ export default function Settings() {
     }
   };
 
+  async function updateRedux() {
+    const userInfo = await getUserInfo();
+    console.log('redux')
+    dispatch(setUser(userInfo));
+  }
   return (
     <div className="container mx-auto max-w-2xl py-10">
       <Card className="w-full">

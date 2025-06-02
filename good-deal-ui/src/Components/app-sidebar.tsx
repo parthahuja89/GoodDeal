@@ -68,8 +68,7 @@ const items = [
 
 export function AppSidebar() {
   const userData = useSelector((state: RootState) => state.user.userData);
-  const { open } = useSidebar(); 
-
+  const { open } = useSidebar();
 
   return (
     <>
@@ -77,7 +76,11 @@ export function AppSidebar() {
         <SidebarTrigger className="w-full p-4" />
       </div>
       <Sidebar collapsible="icon">
-        <span className={`font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500 ${open ? 'p-4 text-xl' : 'p-3 text-md'}`}>
+        <span
+          className={`font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500 ${
+            open ? "p-4 text-xl" : "p-3 text-md"
+          }`}
+        >
           {open ? "Good Deals" : "GD"}
         </span>
         <SidebarContent>
@@ -158,7 +161,17 @@ export function AppSidebar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="text-red-500 focus:text-red-500 cursor-pointer"
-                  onClick={() => {}}
+                  onClick={() => {
+                    document.cookie.split(";").forEach((cookie) => {
+                      document.cookie = cookie
+                        .replace(/^ +/, "")
+                        .replace(
+                          /=.*/,
+                          `=;expires=${new Date(0).toUTCString()};path=/`
+                        );
+                    });
+                    window.location.reload();
+                  }}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
@@ -168,7 +181,6 @@ export function AppSidebar() {
           </div>
         </SidebarFooter>
       </Sidebar>
-
     </>
   );
 }

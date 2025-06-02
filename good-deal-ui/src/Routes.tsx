@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   const { isAuthenticated, isLoading } = useContext(AuthContext);
   if (isLoading) {
-    return; 
+    return;
   }
   if (isAuthenticated) {
     return <Navigate to="/home" />;
@@ -28,6 +28,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 export { ProtectedRoute };
+
 const AppRoutes = () => (
   <Routes>
     {/* Public Routes */}
@@ -38,9 +39,7 @@ const AppRoutes = () => (
 
     {/* Protected Dashboard Routes - with sidebar */}
     <Route
-      
       element={
-        
         <Layout>
           <ThemeProvider
             attribute="class"
@@ -53,12 +52,10 @@ const AppRoutes = () => (
         </Layout>
       }
     >
-      
       <Route path="home" element={<Dashboard />} />
       <Route path="game/:game_id" element={<GameView />} />
       <Route path="steam-deals" element={<SteamDeals />} />
-      <Route path="settings" element={<Settings/>} />
-    
+      <Route path="settings" element={<Settings />} />
     </Route>
 
     {/* Catch-all for everything else */}

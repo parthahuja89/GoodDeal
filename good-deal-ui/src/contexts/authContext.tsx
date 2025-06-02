@@ -12,6 +12,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({ 
   isAuthenticated: false,
   isLoading: true,
+
 });
 
 export default AuthContext;

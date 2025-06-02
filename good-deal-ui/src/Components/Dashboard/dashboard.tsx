@@ -9,6 +9,8 @@ import SearchResults from "./searchResults";
 import { Game } from "@/models/Game";
 import GameDeal from "../../models/GameDeal";
 import GameCard from "./GameCard";
+import { RootState } from "@/store/redux";
+import { useSelector } from "react-redux";
 
 const gameData: GameDeal[] = [];
 
@@ -20,7 +22,7 @@ export default function GameSearchPage() {
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
   const [isLoadingTopDeals, setIsLoadingTopDeals] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  
+  const userData = useSelector((state: RootState) => state.user.userData);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Fetch top deals on initial load
@@ -101,7 +103,7 @@ export default function GameSearchPage() {
     <div className="container mx-auto px-4 py-12  text-gray-100 min-h-screen">
       <div className="flex flex-col items-center justify-center mb-12">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-center mb-8 tracking-tight text-white select-none">
-          Hi Jay, Let&apos;s find you a{" "}
+          Hi {userData.Firstname}, Let&apos;s find you a{" "}
           <span className="relative inline-block">
             <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
               Good deal.
