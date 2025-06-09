@@ -2,7 +2,11 @@ import { SteamDeal } from "../api/models/SteamDeal";
 import User from "../api/models/User";
 import { db } from "../database/db";
 import { game_meta_data, user_games, users } from "../database/Schema";
-import { convertSteamAppIdsToItadGameIds, fetchPreloadedDeals, getSteamAppIds } from "./Games/Game";
+import {
+  convertSteamAppIdsToItadGameIds,
+  fetchPreloadedDeals,
+  getSteamAppIds,
+} from "./Games/Game";
 import { eq, inArray } from "drizzle-orm";
 
 /**
@@ -17,11 +21,17 @@ export async function addUserGames(
 ): Promise<void> {
   try {
     //Purge old games
-    await db.delete(user_games).where(eq(user_games.user_id, user_id))
+    await db.delete(user_games).where(eq(user_games.user_id, user_id));
 
+    //Update user's steam id in db
+    //update user steam id in db
+    await db
+      .update(users)
+      .set({ steam_id: steam_user_id })
+      .where(eq(users.id, parseInt(user_id)));
     //Get user's steam app ids
     const appIds = (await getSteamAppIds(steam_user_id)).splice(0, 50);
-    if(appIds.length === 0){
+    if (appIds.length === 0) {
       return;
     }
     //Convert steam ids to itad
@@ -34,11 +44,6 @@ export async function addUserGames(
         game_id: game_id,
       }))
     );
-
-    //update user steam id in db
-    await db.update(users)
-      .set({ steam_id: steam_user_id })
-      .where(eq(users.id, parseInt(user_id)));
   } catch (error) {
     console.error("Error adding user games:", error);
     throw error;
@@ -46,7 +51,7 @@ export async function addUserGames(
 }
 
 //Deals for the games that the user is subscribed for
-export async function getUserDeals(user_id: string): Promise<SteamDeal []> {
+export async function getUserDeals(user_id: string): Promise<SteamDeal[]> {
   try {
     const userGameIds = await db
       .select({ game_id: user_games.game_id })
@@ -56,7 +61,7 @@ export async function getUserDeals(user_id: string): Promise<SteamDeal []> {
         rows.map((r) => r.game_id).filter((id): id is string => id !== null)
       );
 
-    if(userGameIds.length==0){
+    if (userGameIds.length == 0) {
       return [];
     }
 
@@ -65,14 +70,13 @@ export async function getUserDeals(user_id: string): Promise<SteamDeal []> {
       .from(game_meta_data)
       .where(inArray(game_meta_data.game_id, userGameIds));
 
-    const steamDeals: SteamDeal[] = gameMetaData.map(game => ({
+    const steamDeals: SteamDeal[] = gameMetaData.map((game) => ({
       itad_id: game.game_id,
-      asset_url: game.asset_url ?? '',
-      title: game.title ?? '',
+      asset_url: game.asset_url ?? "",
+      title: game.title ?? "",
     }));
 
     return await fetchPreloadedDeals(userGameIds, steamDeals);
-
   } catch (error) {
     console.error("Error retrieving user games:", error);
     throw error;
@@ -85,17 +89,17 @@ export async function getUserInfo(user_id: string): Promise<User> {
       .select()
       .from(users)
       .where(eq(users.id, parseInt(user_id)));
-    
+
     if (!userInfo) {
       throw new Error("User not found");
     }
-    
+
     return {
-      Firstname: userInfo.name?.split(' ')[0] ?? '',
-      Lastname: userInfo.name?.split(' ')[1] ?? '',
+      Firstname: userInfo.name?.split(" ")[0] ?? "",
+      Lastname: userInfo.name?.split(" ")[1] ?? "",
       email: userInfo.email,
-      picture_url: userInfo.picture ?? '',
-      steam_id: userInfo.steam_id ?? '',
+      picture_url: userInfo.picture ?? "",
+      steam_id: userInfo.steam_id ?? "",
     };
   } catch (error) {
     console.error("Error fetching user info:", error);
@@ -103,24 +107,31 @@ export async function getUserInfo(user_id: string): Promise<User> {
   }
 }
 
-export async function updateUserInfo(user_id: string, userInfo: User): Promise<void> {
+export async function updateUserInfo(
+  user_id: string,
+  userInfo: User
+): Promise<void> {
   try {
     const updateData: Partial<typeof users.$inferInsert> = {};
 
     if (userInfo.Firstname !== undefined || userInfo.Lastname !== undefined) {
-      updateData.name = `${userInfo.Firstname || ""} ${userInfo.Lastname || ""}`.trim();
+      updateData.name = `${userInfo.Firstname || ""} ${
+        userInfo.Lastname || ""
+      }`.trim();
     }
-    
+
     if (userInfo.steam_id !== undefined) {
       updateData.steam_id = userInfo.steam_id;
     }
-    
+
     if (Object.keys(updateData).length > 0) {
-      await db.update(users).set(updateData).where(eq(users.id, parseInt(user_id)));
+      await db
+        .update(users)
+        .set(updateData)
+        .where(eq(users.id, parseInt(user_id)));
     }
   } catch (error) {
     console.error("Error updating user info:", error);
     throw error;
   }
 }
-

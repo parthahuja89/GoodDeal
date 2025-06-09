@@ -3,6 +3,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 interface GameCardProps {
   game: any;
@@ -43,17 +44,15 @@ export default function GameCard({ game, index }: GameCardProps) {
             ${game.price_regular}
           </span>
           <div className="flex items-end mt-10 gap-2 justify-end">
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => (window.location.href = `game/${game.id}`)}
-            >
-              More Info
-            </Button>
+            <Link to={`/game/${game.id}`}>
+              <Button size="sm" variant="secondary">
+                More Info
+              </Button>
+            </Link>
             <Button
               size="sm"
               onClick={() => {
-                window.location.href = game.url;
+                window.open(game.url, '_blank');
               }}
             >
               <ShoppingBag />

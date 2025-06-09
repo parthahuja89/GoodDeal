@@ -132,7 +132,7 @@ export function AppSidebar() {
                     <span className="font-medium text-sm">
                       {userData.Firstname} {userData.Lastname}
                     </span>
-                    <span className="text-xs text-muted-foreground truncate">
+                    <span className="text-xs text-muted-foreground truncate max-w-[150px]">
                       {userData.email || "User"}
                     </span>
                   </div>
@@ -144,7 +144,7 @@ export function AppSidebar() {
                   <div className="font-medium">
                     {userData.Firstname} {userData.Lastname}
                   </div>
-                  <div className="text-xs text-muted-foreground truncate">
+                  <div className="text-xs text-muted-foreground truncate max-w-[150px]">
                     {userData.email}
                   </div>
                 </div>

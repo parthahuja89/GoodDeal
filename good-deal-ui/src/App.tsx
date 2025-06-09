@@ -17,7 +17,6 @@ function App() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userInfo = await getUserInfo();
-      console.log(userInfo);
       dispatch(setUser(userInfo));
     };
     fetchUserInfo();

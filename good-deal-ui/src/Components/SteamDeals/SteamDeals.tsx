@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/redux";
+import { setUser, updateUser } from "@/store/slices/userSlice";
 import {
   calculateGameSavings,
   getGameDeals,
@@ -29,6 +32,8 @@ import { Label } from "@/components/ui/label";
 import { Tag, Percent, DollarSign, CircleOff, RefreshCcw } from "lucide-react";
 import { SteamDeal } from "@/models/SteamDeal";
 import SteamDealsTable from "./SteamDealsTable";
+import getUserInfo from "@/Services/User";
+import User from "@/models/User";
 
 export default function SteamDeals() {
   interface StatsCardProps {
@@ -46,6 +51,8 @@ export default function SteamDeals() {
   const [gameData, setGameData] = useState<SteamDeal[]>([]);
   const [syncLoader, setSyncLoader] = useState(false);
   const [pageLoader, setPageLoader] = useState(false);
+  const dispatch = useDispatch();
+  const userData = useSelector((state: RootState) => state.user.userData);
   const { toast } = useToast();
 
   const isLoading = syncLoader || pageLoader;
@@ -53,15 +60,15 @@ export default function SteamDeals() {
   async function updateUserGames() {
     setPageLoader(true);
     try {
-      const res = await getGameDeals()
+      const res = await getGameDeals();
       setGameData(res);
       const [savings, discount] = calculateGameSavings(res);
-      
+
       setTotalGames(res.length.toString());
       setTotalSavings(savings.toString());
       setAverageDiscount(discount.toFixed(2).toString());
 
-      return res
+      return res;
     } catch (error) {
       toast({
         title: "Error loading games",
@@ -77,9 +84,21 @@ export default function SteamDeals() {
     }
   }
 
+  function updateSteamId() {
+    //update steam id value
+    if (userData.steam_id) {
+      setSteamId(userData.steam_id);
+    }
+  }
+
   useEffect(() => {
     updateUserGames();
   }, []);
+
+  //Update steamID if userData changes
+  useEffect(() => {
+    updateSteamId();
+  }, [userData]);
 
   async function syncSteamDeals() {
     setSyncLoader(true);
@@ -87,7 +106,6 @@ export default function SteamDeals() {
       await syncSteamWishlist(steamId);
       const games = await updateUserGames();
 
-      
       if (!games || games.length === 0) {
         toast({
           title: "No games found",
@@ -102,10 +120,12 @@ export default function SteamDeals() {
         description:
           error instanceof Error
             ? error.message
-            : "An unexpected error occurred"
+            : "An unexpected error occurred",
       });
     } finally {
       setSyncLoader(false);
+      const userInfo = await getUserInfo();
+      dispatch(setUser(userInfo));
     }
   }
 
@@ -164,7 +184,6 @@ export default function SteamDeals() {
   );
 
   const renderMainContent = () => {
-    
     if (pageLoader) return <PageLoader />;
     if (Number(totalGames) == 0) return <EmptyState />;
     return <SteamDealsTable gameData={gameData} />;

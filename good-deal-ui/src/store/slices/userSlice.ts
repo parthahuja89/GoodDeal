@@ -10,7 +10,8 @@ const initialState: UserState = {
     Firstname: '',
     Lastname: '',
     picture_url: '',
-    email: ''
+    email: '',
+    steam_id: ''
   }
 };
 
