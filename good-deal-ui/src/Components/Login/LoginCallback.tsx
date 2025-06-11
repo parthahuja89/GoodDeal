@@ -40,7 +40,7 @@ export default function LoginCallback() {
         else{
           try {
             await Auth.getTokenFromCode(authCode)
-            window.location.href = '/Home';
+            window.location.href = '/home';
 
           } catch (error) {
             setShowError(true)
@@ -63,16 +63,6 @@ export default function LoginCallback() {
                   </AlertTitle>
                   <AlertDescription className="mt-2">
                     There was an error logging you in.
-                    <div className="my-1" />
-                    Please submit a{" "}
-                    <a className="underline" href="#">
-                      ticket
-                    </a>
-                    , or Return to{" "}
-                    <a className="underline" href="/login">
-                      login
-                    </a>
-                    .
                   </AlertDescription>
                 </Alert>
               </CardDescription>

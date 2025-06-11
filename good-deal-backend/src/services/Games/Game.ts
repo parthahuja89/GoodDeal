@@ -70,6 +70,8 @@ export const getGameInfo = async (gameId: string): Promise<Game> => {
 
     const data = response.data;
 
+    //Get game assets from igdb
+
     const game: Game = {
       title: data.title,
       id: data.id,
@@ -81,6 +83,7 @@ export const getGameInfo = async (gameId: string): Promise<Game> => {
       publishers: data.publishers,
       tags: data.tags,
       asset_url: data.assets?.banner600 || data.assets?.banner400,
+      boxart_url: data.assets?.boxart,
       reviews: data.reviews
       .filter((review: any) => review.score > 0)
       .map((review: any) => ({

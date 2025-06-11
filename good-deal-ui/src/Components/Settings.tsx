@@ -207,23 +207,8 @@ export default function Settings() {
               </p>
             </div>
             
-            <div className="flex w-full justify-between">
-              <Button
-                type="button"
-                className="w-2/3 md:w-1/3"
-                disabled={isSubmitting}
-                variant="destructive"
-                onClick={() => setShowDeleteDialog(true)}
-              >
-                {isSubmitting ? (
-                  <>Saving...</>
-                ) : (
-                  <>
-                    <Trash className="mr-2 h-4 w-4" />
-                    Delete Account
-                  </>
-                )}
-              </Button>
+            <div className="flex w-full justify-end">
+              
               <Button
                 type="submit"
                 className="w-2/3 md:w-1/3"

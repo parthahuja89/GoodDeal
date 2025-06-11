@@ -56,12 +56,6 @@ function LoginPage() {
             </AlertTitle>
             <AlertDescription className="mt-2">
               You don't need an account created to sign in.
-              <div className="my-1" />
-              If you're having troubles signing in, please submit a{" "}
-              <a className="underline" href="#">
-                ticket
-              </a>
-              .
             </AlertDescription>
           </Alert>
 

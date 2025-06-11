@@ -1,62 +1,89 @@
-import React from "react";
-import { Button } from "../ui/button";
-import { Info, LogIn } from "lucide-react";
-import { motion } from "framer-motion";
+"use client"
+import { Button } from "@/components/ui/button"
+import { Info, LogIn, ArrowRight, Sparkles } from "lucide-react"
+import { motion } from "framer-motion"
+import { Badge } from "@/components/ui/badge"
 
 export default function Hero() {
   return (
-    <div className="text-center">
-      {/* Smooth Fade-in Heading */}
-      <motion.h1 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="text-5xl md:text-7xl font-bold text-white text-clip"
+    <div className="text-center py-20">
+
+      {/* Main Heading */}
+      <motion.h1
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight"
       >
-        Video games are expensive. Game Deals makes it easy to find
-        <span className="mx-2" />
-        <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
-          Cheap
-        </span>
-        <span className="mx-2" />
-        Games.
+        Never Pay Full Price for{" "}
+        <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600 text-transparent bg-clip-text">
+          Games
+        </span>{" "}
+        Again
       </motion.h1>
 
-      
-      <motion.h2 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        transition={{ delay: 0.2, duration: 0.5, ease: "easeInOut" }}
-        className="text-xl md:text-2xl font-light text-slate-400 mt-5"
+      {/* Subtitle */}
+      <motion.p
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        className="text-xl md:text-2xl text-zinc-400 mt-8 max-w-4xl mx-auto leading-relaxed"
       >
-        Dead simple to use. Search a game, and add it to your watchlist. You'll receive email notifications when the game goes on sale.
-        You can also view the current best deals.
-        This project is also completely free to use and open source. You can check out the code on{" "}
+        Track game prices across all major platforms.
+        Sync your Steam library and discover the best deals automatically.
+      </motion.p>
+
+      {/* Features List */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        className="flex flex-wrap justify-center gap-6 mt-8 text-zinc-300"
+      >
+        {["Steam Integration", "Multi-Platform", "Always Free"].map((feature, index) => (
+          <div key={feature} className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full" />
+            <span className="text-sm font-medium">{feature}</span>
+          </div>
+        ))}
+      </motion.div>
+
+      {/* CTA Buttons */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        className="flex flex-col sm:flex-row justify-center gap-4 mt-12"
+      >
+        <Button
+          size="lg"
+          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-lg font-semibold group"
+          onClick={() => (window.location.href = "/login")}
+        >
+          <LogIn className="mr-2 h-5 w-5" />
+          Start Saving Now
+          <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+        </Button>
+
+      </motion.div>
+
+      {/* GitHub Link */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1 }}
+        className="text-sm text-zinc-500 mt-8"
+      >
+        Open source on{" "}
         <a
           href="https://github.com/partha-huja/GameWrecks"
           target="_blank"
           rel="noreferrer"
-          className="text-blue-300"
+          className="text-purple-400 hover:text-purple-300 transition-colors underline"
         >
           GitHub
-        </a>.
-      </motion.h2>
-      
-      <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        transition={{ delay: 0.3, duration: 0.5, ease: "easeInOut" }}
-        className="flex justify-center gap-4"
-      >
-        <Button variant="secondary" className="mt-10">
-          Learn More
-          <Info className="h-5 w-5" />
-        </Button>
-        <Button className="mt-10" onClick={()=>window.location.href="/login"}>
-          Login
-          <LogIn className="h-5 w-5" />
-        </Button>
-      </motion.div>
+        </a>
+      </motion.p>
     </div>
-  );
+  )
 }

@@ -9,6 +9,7 @@ export interface Game {
     publishers: string[];
     tags: string[];
     asset_url?: string;
+    boxart_url?:string;
     reviews?: {
         score: number;
         source: string;

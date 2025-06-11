@@ -1,14 +1,12 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+import { AppNavbar } from "./AppNavbar"
  
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider defaultOpen={true}>
-      <AppSidebar />
-
-      <main className="w-full">
-        {children}
-      </main>
-    </SidebarProvider>
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
+      <AppNavbar />
+      <main className="w-full">{children}</main>
+    </div>
   )
 }
