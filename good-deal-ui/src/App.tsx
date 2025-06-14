@@ -16,6 +16,14 @@ function App() {
     };
     fetchUserInfo();
   }, [dispatch]);
+
+  //disabling logging in production
+  if (process.env.NODE_ENV === "production") {
+    console.log = () => {};
+    console.error = () => {};
+    console.debug = () => {};
+    console.warn = () => {};
+  }
   return (
     <Router>
       <AppRoutes />
