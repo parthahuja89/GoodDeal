@@ -24,7 +24,6 @@ route.post("/token", async (req: Request, res: Response) => {
       httpOnly: false,
       secure: false,
       sameSite: 'lax',
-      domain: 'localhost' // remove this line in production unless needed
     });
 
     res.status(200).json('Token cookie generated successfully.');
