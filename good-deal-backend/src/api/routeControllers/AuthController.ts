@@ -9,24 +9,24 @@ route.get("/", (req: Request, res: Response) => {
 });
 
 route.post("/token", async (req: Request, res: Response) => {
-  const authCode = req.headers['auth_code'] as string;
+  const { auth_code: authCode } = req.body;
   if (!authCode) {
-    res.status(400).json({ error: "Authorization code is required as a header." });
+    res.status(400).json({ error: "Authorization code is required in the request body." });
     return;
   }
   const token = await AuthService.createUserToken(authCode);
-  console.log("token", token)
-  if(token == ''){
+
+  if (token === '') {
     res.status(401).json({ error: "Error generating access token. Authorization code may be invalid." });
     return;
-  }
-  else{
-    res.cookie('auth_token', token, { 
-    httpOnly: false, 
-    secure: false, 
-    sameSite: 'lax',
-    domain: 'localhost' // or omit this line entirely
-  });
+  } else {
+    res.cookie('auth_token', token, {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'lax',
+      domain: 'localhost' // remove this line in production unless needed
+    });
+
     res.status(200).json('Token cookie generated successfully.');
   }
 });

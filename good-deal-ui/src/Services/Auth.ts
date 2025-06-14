@@ -42,14 +42,14 @@ export async function getAuthStatus(): Promise<boolean> {
     }
 }
 
-//Gets the token from API by exchanging auth code
+// Gets the token from API by exchanging auth code
 export async function getTokenFromCode(authCode: string) {
-    await axios.post(`${baseApiUri}/api/auth/token`, {
-        withCredentials: true,
-        headers: {
-            auth_code: authCode
+    await axios.post(
+        `${baseApiUri}/api/auth/token`,
+        { auth_code: authCode },
+        {
+            withCredentials: true
         }
-
-    })       
+    );
 }
 export default redirectToGoogleAuth;
