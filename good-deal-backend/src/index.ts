@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 //cors policy 
   
 const corsOptions = {
-  origin: 'http://localhost:5173',  
+  origin: ['http://localhost:5173', 'https://good-deal-ui.vercel.app'],  
   methods: 'GET,POST,PUT,DELETE,PATCH',  
   credentials: true,  
 };
