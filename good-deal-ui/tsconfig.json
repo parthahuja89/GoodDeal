@@ -10,6 +10,10 @@
       "vite/client"
     ],
     "baseUrl": ".",
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "local/*": ["../path/to/local/modules/*"]
+    },
     "resolveJsonModule": true
   }
 }

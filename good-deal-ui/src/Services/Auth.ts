@@ -1,6 +1,8 @@
 import Resources from '../resources.json'
 import axios, { AxiosResponse } from 'axios';
-const baseApiUri = Resources.urls.api_base_uri
+
+const isProd = process.env.NODE_ENV === 'production';
+const baseApiUri = isProd ? Resources["prod-urls"].api_base_uri : Resources["local-urls"].api_base_uri
 
 /**
  * Handler for OAuth service calls for authenticating wit Google and Github
