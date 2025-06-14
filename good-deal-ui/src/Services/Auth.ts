@@ -1,8 +1,8 @@
 import Resources from '../resources.json'
 import axios, { AxiosResponse } from 'axios';
 
-const isProd = process.env.NODE_ENV === 'production';
-const baseApiUri = isProd ? Resources["prod-urls"].api_base_uri : Resources["local-urls"].api_base_uri
+const url = process.env.NODE_ENV === 'production' ? "prod-urls" : "local-urls"
+const baseApiUri = Resources[url].api_base_uri
 
 /**
  * Handler for OAuth service calls for authenticating wit Google and Github
@@ -16,13 +16,13 @@ export function redirectToGoogleAuth() {
 
     const params = new URLSearchParams({
         client_id: clientID,
-        redirect_uri: Resources.urls.redirect_uri,
+        redirect_uri: Resources[url].redirect_uri,
         access_type: 'offline',
         response_type: 'code',
         scope: 'openid profile email',
     });
 
-    const googleAuthUrl = `${Resources.urls.google_oauth_uri}?${params.toString()}`;
+    const googleAuthUrl = `${Resources[url].google_oauth_uri}?${params.toString()}`;
 
     window.location.href = googleAuthUrl;
 }
