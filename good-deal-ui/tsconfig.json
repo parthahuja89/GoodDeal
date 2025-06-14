@@ -12,6 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["./src/components/*"],
+      "@components/ui/*": ["./src/components/ui/*"],
       "local/*": ["../path/to/local/modules/*"]
     },
     "resolveJsonModule": true
