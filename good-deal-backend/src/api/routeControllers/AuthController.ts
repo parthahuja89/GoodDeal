@@ -23,6 +23,7 @@ route.post("/token", async (req: Request, res: Response) => {
     res.cookie('auth_token', token, {
       httpOnly: false,
       secure: false,
+      domain: process.env.NODE_ENV === 'production' ? 'good-deal-ui.vercel.app' : 'localhost',
       sameSite: 'lax',
     });
 
