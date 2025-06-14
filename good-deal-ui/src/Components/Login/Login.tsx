@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Info } from "lucide-react";
 import { Button } from "../ui/button";
 import GoogleLogo from "../../assets/google_logo.svg";
 import { MoveLeftIcon } from "lucide-react";

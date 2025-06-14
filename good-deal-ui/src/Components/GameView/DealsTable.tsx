@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,14 +10,12 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  ShoppingBag,
   ArrowUp,
   ArrowDown,
   ChevronLeft,
   ChevronRight,
   AlertTriangle,
 } from "lucide-react";
-import windows from "@/assets/windows.svg";
 import GameDeal from "@/models/GameDeal";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 

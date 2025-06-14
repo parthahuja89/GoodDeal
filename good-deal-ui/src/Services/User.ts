@@ -1,4 +1,3 @@
-import Resources from "../resources.json";
 import axiosApiInstance from "@/contexts/AxiosApiInstance";
 import { AxiosResponse } from "axios";
 import User from "@/models/User";

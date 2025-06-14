@@ -1,6 +1,6 @@
 "use client"
 import { motion } from "framer-motion"
-import { Bell, Shield, Zap, Search, Gamepad2 as Steam, TrendingDown } from "lucide-react"
+import { Zap, Gamepad2 as Steam, TrendingDown } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 const features = [

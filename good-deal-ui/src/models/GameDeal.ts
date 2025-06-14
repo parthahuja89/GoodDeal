@@ -6,5 +6,5 @@ export default interface GameDeal {
     price_new: number;
     url: string;
     store: string;
-    platforms: string[];
+    platforms: {name: string}[];
 }

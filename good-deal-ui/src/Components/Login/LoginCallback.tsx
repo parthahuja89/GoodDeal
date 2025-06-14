@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from "react-router-dom";
 import {
     Card,
@@ -22,7 +22,7 @@ const styles = {
 export default function LoginCallback() {
 
     const [showError, setShowError] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     useEffect( () => {
       console.log('LoginCallback component mounted');

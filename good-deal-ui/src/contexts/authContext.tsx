@@ -1,5 +1,4 @@
-import React, { createContext, useEffect, useState, useContext } from "react";
-import { Navigate } from "react-router-dom";
+import React, { createContext, useEffect, useState} from "react";
 import { getAuthStatus } from "@/Services/Auth";
 
 //Currently not using this authContext

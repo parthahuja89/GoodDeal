@@ -1,21 +1,12 @@
 "use client";
 
 import { useEffect, useState, useRef, useMemo } from "react";
-import {
-  Search,
-  ShoppingBag,
-  X,
-  Loader2,
-  TrendingUp,
-  Zap,
-  Star,
-  Filter,
-} from "lucide-react";
+import { Search, ShoppingBag, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { AnimatePresence, motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchGameDeals, searchGames } from "@/Services/Games";
@@ -32,7 +23,6 @@ const gameData: GameDeal[] = [];
 export default function GameSearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [topDealsResults, setTopDeals] = useState(gameData);
-  const topDealsCache = useRef<GameDeal[] | null>(null);
   const [searchResults, setSearchResults] = useState<Game[]>([]);
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
@@ -46,17 +36,22 @@ export default function GameSearchPage() {
     const activeDeals = topDealsResults.length;
 
     const dealsWithDiscount = topDealsResults.filter(
-      game => game.price_regular && game.price_new && game.price_regular > game.price_new
+      (game) =>
+        game.price_regular &&
+        game.price_new &&
+        game.price_regular > game.price_new
     );
-    
+
     const totalDiscount = dealsWithDiscount.reduce((sum, game) => {
-      const discount = ((game.price_regular! - game.price_new!) / game.price_regular!) * 100;
+      const discount =
+        ((game.price_regular! - game.price_new!) / game.price_regular!) * 100;
       return sum + discount;
     }, 0);
-    
-    const avgDiscount = dealsWithDiscount.length > 0 
-      ? Math.round(totalDiscount / dealsWithDiscount.length) 
-      : 0;
+
+    const avgDiscount =
+      dealsWithDiscount.length > 0
+        ? Math.round(totalDiscount / dealsWithDiscount.length)
+        : 0;
 
     const totalSavings = dealsWithDiscount.reduce((sum, game) => {
       return sum + (game.price_regular! - game.price_new!);
@@ -68,15 +63,18 @@ export default function GameSearchPage() {
         value: activeDeals.toString(),
         change: activeDeals > 0 ? `+${Math.min(activeDeals, 99)}` : "0",
       },
-      { 
-        label: "Avg. Discount", 
-        value: avgDiscount > 0 ? `${avgDiscount}%` : "0%", 
-        change: avgDiscount > 0 ? `+${Math.min(avgDiscount, 99)}%` : "0%" 
+      {
+        label: "Avg. Discount",
+        value: avgDiscount > 0 ? `${avgDiscount}%` : "0%",
+        change: avgDiscount > 0 ? `+${Math.min(avgDiscount, 99)}%` : "0%",
       },
-      { 
-        label: "Total Savings", 
-        value: totalSavings > 0 ? `$${Math.round(totalSavings)}` : "$0", 
-        change: dealsWithDiscount.length > 0 ? `${dealsWithDiscount.length} games` : "0 games" 
+      {
+        label: "Total Savings",
+        value: totalSavings > 0 ? `$${Math.round(totalSavings)}` : "$0",
+        change:
+          dealsWithDiscount.length > 0
+            ? `${dealsWithDiscount.length} games`
+            : "0 games",
       },
     ];
   }, [topDealsResults]);
@@ -206,36 +204,38 @@ export default function GameSearchPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-4xl mx-auto"
             >
-              {isLoadingTopDeals ? (
-                // Loading skeletons for stats
-                Array.from({ length: 3 }).map((_, index) => (
-                  <Card
-                    key={index}
-                    className="bg-zinc-800/30 backdrop-blur-md border-zinc-700/50"
-                  >
-                    <CardContent className="p-4 text-center">
-                      <Skeleton className="h-8 w-16 mx-auto mb-2 bg-zinc-700/50" />
-                      <Skeleton className="h-4 w-20 mx-auto mb-1 bg-zinc-700/50" />
-                      <Skeleton className="h-3 w-12 mx-auto bg-zinc-700/50" />
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                stats.map((stat, index) => (
-                  <Card
-                    key={index}
-                    className="bg-zinc-800/30 backdrop-blur-md border-zinc-700/50"
-                  >
-                    <CardContent className="p-4 text-center">
-                      <div className="text-2xl font-bold text-white">
-                        {stat.value}
-                      </div>
-                      <div className="text-sm text-zinc-400">{stat.label}</div>
-                      <div className="text-xs text-green-400">{stat.change}</div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
+              {isLoadingTopDeals
+                ? // Loading skeletons for stats
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <Card
+                      key={index}
+                      className="bg-zinc-800/30 backdrop-blur-md border-zinc-700/50"
+                    >
+                      <CardContent className="p-4 text-center">
+                        <Skeleton className="h-8 w-16 mx-auto mb-2 bg-zinc-700/50" />
+                        <Skeleton className="h-4 w-20 mx-auto mb-1 bg-zinc-700/50" />
+                        <Skeleton className="h-3 w-12 mx-auto bg-zinc-700/50" />
+                      </CardContent>
+                    </Card>
+                  ))
+                : stats.map((stat, index) => (
+                    <Card
+                      key={index}
+                      className="bg-zinc-800/30 backdrop-blur-md border-zinc-700/50"
+                    >
+                      <CardContent className="p-4 text-center">
+                        <div className="text-2xl font-bold text-white">
+                          {stat.value}
+                        </div>
+                        <div className="text-sm text-zinc-400">
+                          {stat.label}
+                        </div>
+                        <div className="text-xs text-green-400">
+                          {stat.change}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
             </motion.div>
 
             {/* Search Section */}
@@ -300,10 +300,7 @@ export default function GameSearchPage() {
               </form>
 
               {showResults && searchResults.length > 0 && (
-                <div
-
-                  className="absolute top-full mt-4 w-full z-50"
-                >
+                <div className="absolute top-full mt-4 w-full z-50">
                   <SearchResults games={searchResults} />
                 </div>
               )}
@@ -339,7 +336,6 @@ export default function GameSearchPage() {
               onValueChange={setActiveCategory}
               className="w-full"
             >
-
               <TabsContent value="all" className="mt-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {isLoadingTopDeals
@@ -505,12 +501,11 @@ export default function GameSearchPage() {
                     <p className="text-zinc-400 mb-4">
                       Link your steam wishlist and get the best deals.
                     </p>
-                    <Link
-                    to="/steam-deals">
-                    <Button className="bg-purple-600 hover:bg-purple-700 text-white">
-                      <ShoppingBag className="mr-2 h-4 w-4" />
-                      Get Started
-                    </Button>
+                    <Link to="/steam-deals">
+                      <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                        <ShoppingBag className="mr-2 h-4 w-4" />
+                        Get Started
+                      </Button>
                     </Link>
                   </div>
                   <div className="flex items-center gap-2">
@@ -520,7 +515,6 @@ export default function GameSearchPage() {
                     >
                       New Feature
                     </Badge>
-
                   </div>
                 </div>
               </CardContent>

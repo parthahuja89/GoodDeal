@@ -4,8 +4,8 @@ export interface Game {
     description: string;
     release_date: string;
     platforms: string[];
-    genres: string[];
-    developers: string[];
+genres: string[];
+    developers: { name: string }[];
     publishers: string[];
     tags: string[];
     boxart_url:string;

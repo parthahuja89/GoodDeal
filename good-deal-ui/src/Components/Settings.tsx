@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Save, Trash, User2Icon } from "lucide-react";
+import { Save, User2Icon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -28,7 +27,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import getUserInfo, { saveUserInfo } from "@/Services/User";
-import User from "@/models/User";
 import { RootState } from "@/store/redux";
 import { setUser } from "@/store/slices/userSlice";
 

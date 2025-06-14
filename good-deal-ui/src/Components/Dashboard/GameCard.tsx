@@ -2,7 +2,6 @@
 import { motion, useAnimation } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 interface GameCardProps {

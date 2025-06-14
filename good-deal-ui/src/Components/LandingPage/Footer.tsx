@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Footer() {
   return (
     <footer className="flex mt-20 flex-row items-center justify-between gap-10 w-full px-4">

@@ -1,8 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { Info, LogIn, ArrowRight, Sparkles } from "lucide-react"
+import { LogIn, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { Badge } from "@/components/ui/badge"
 
 export default function Hero() {
   return (
@@ -40,7 +39,7 @@ export default function Hero() {
         transition={{ duration: 0.8, delay: 0.6 }}
         className="flex flex-wrap justify-center gap-6 mt-8 text-zinc-300"
       >
-        {["Steam Integration", "Multi-Platform", "Always Free"].map((feature, index) => (
+        {["Steam Integration", "Multi-Platform", "Always Free"].map((feature) => (
           <div key={feature} className="flex items-center gap-2">
             <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full" />
             <span className="text-sm font-medium">{feature}</span>

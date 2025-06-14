@@ -100,7 +100,7 @@ export default function GameView() {
   useEffect(() => {
     if (game?.reviews && animatedWidths.length > 0) {
       const timer = setTimeout(() => {
-        setAnimatedWidths(game.reviews.map((rating) => rating.score));
+        setAnimatedWidths(game?.reviews?.map((rating) => rating.score) || []);
       }, 300);
 
       return () => clearTimeout(timer);

@@ -1,10 +1,8 @@
 import Features from "./Features";
-import CommonQuestions from "./CommonQuestions";
 import Tutorial from "./Tutorial";
 import NavBar from "./Navbar";
 import Hero from "./Hero";
 import Footer from "./Footer";
-import TrendingCarousel from './TrendingCarousel';
 
 
 export default function Landing() {
