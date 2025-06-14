@@ -44,7 +44,7 @@ export async function getAuthStatus(): Promise<boolean> {
 
 //Gets the token from API by exchanging auth code
 export async function getTokenFromCode(authCode: string) {
-    await axios.get(`${baseApiUri}/api/auth/token`, {
+    await axios.post(`${baseApiUri}/api/auth/token`, {
         withCredentials: true,
         headers: {
             auth_code: authCode

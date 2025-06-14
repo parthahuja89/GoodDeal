@@ -8,7 +8,7 @@ route.get("/", (req: Request, res: Response) => {
   res.json({ default: "route" }).status(200);
 });
 
-route.get("/token", async (req: Request, res: Response) => {
+route.post("/token", async (req: Request, res: Response) => {
   const authCode = req.headers['auth_code'] as string;
   if (!authCode) {
     res.status(400).json({ error: "Authorization code is required as a header." });
