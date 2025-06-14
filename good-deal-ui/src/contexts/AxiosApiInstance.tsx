@@ -1,9 +1,10 @@
 import axios from "axios";
 import Resources from '../resources.json'
 
+const isProd = process.env.NODE_ENV === 'production';
 const axiosApiInstance = axios.create({
-  baseURL: Resources.urls.api_base_uri, 
-  withCredentials: true, 
+  baseURL: isProd ? Resources["prod-urls"].api_base_uri : Resources["local-urls"].api_base_uri,
+  withCredentials: true,
 });
 
 // Redirect to login on 401 errors (except when already on auth pages)
