@@ -15,7 +15,6 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export async function createUserToken(authCode: string): Promise<string> {
     const clientID = process.env.G_AUTH_CLIENT_ID;
     const clientSecret = process.env.G_AUTH_SECRET;
-
     if (!clientID || !clientSecret) {
         logger.error('Missing Google Auth credentials: G_AUTH_CLIENT_ID or G_AUTH_SECRET');
         return '';
@@ -25,7 +24,7 @@ export async function createUserToken(authCode: string): Promise<string> {
         client_id: clientID,
         client_secret: clientSecret,
         grant_type: 'authorization_code',
-        redirect_uri: 'http://localhost:5173/callback',
+        redirect_uri: Resources.urls.redirect_uri,
         code: authCode,
     });
 
