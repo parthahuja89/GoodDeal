@@ -22,7 +22,7 @@ route.post("/token", async (req: Request, res: Response) => {
   } else {
     res.cookie('auth_token', token, {
       httpOnly: false,
-      secure: false,
+      secure: true,
       sameSite: 'none',
     });
 
