@@ -9,7 +9,7 @@
     "prod-urls":{
         "google_oauth_uri": "https://accounts.google.com/o/oauth2/v2/auth",
         "redirect_uri": "https://good-deal-ui.vercel.app/callback",
-        "api_base_uri": "https://good-deal-api.vercel.app",
+        "api_base_uri": "https://good-deal-ui.vercel.app/api",
         "base_steam_uri":"https://api.steampowered.com",
         "base_itad_uri": "https://api.isthereanydeal.com"
     }
