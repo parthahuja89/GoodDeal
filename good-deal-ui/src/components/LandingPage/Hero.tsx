@@ -75,7 +75,7 @@ export default function Hero() {
       >
         Open source on{" "}
         <a
-          href="https://github.com/partha-huja/GameWrecks"
+          href="https://github.com/parthahuja89/GoodDeal"
           target="_blank"
           rel="noreferrer"
           className="text-purple-400 hover:text-purple-300 transition-colors underline"
